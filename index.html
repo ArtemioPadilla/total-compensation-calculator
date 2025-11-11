@@ -488,7 +488,8 @@
                 <li><strong>Stock Value:</strong> Enter the total value of stock grants (RSUs, options, etc.)</li>
                 <li><strong>Vesting Period:</strong> Specify how many years your stocks vest over</li>
                 <li><strong>Bonuses:</strong> Include signing bonuses and annual performance bonuses</li>
-                <li><strong>Benefits:</strong> Add monetary value of benefits (401k match, health insurance, etc.)</li>
+                <li><strong>Medical Benefits:</strong> Enter the annual value of health, dental, and vision insurance</li>
+                <li><strong>Other Benefits:</strong> Add monetary value of other benefits (401k match, gym, commuter, etc.)</li>
                 <li><strong>Compare:</strong> The comparison table shows all offers side-by-side with the best values highlighted</li>
                 <li><strong>Visualize:</strong> View interactive charts showing compensation over time, including stock vesting schedules, bonuses, and other time-based events</li>
             </ul>
@@ -567,9 +568,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="${offerId}-benefits">Annual Benefits Value</label>
+                    <label for="${offerId}-medical">Medical Benefits (Annual)</label>
+                    <input type="number" id="${offerId}-medical" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Health, dental, vision insurance value</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-benefits">Other Benefits (Annual)</label>
                     <input type="number" id="${offerId}-benefits" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">401k match, health insurance, etc. (annual value)</div>
+                    <div class="help-text">401k match, gym, commuter benefits, etc.</div>
                 </div>
 
                 <div class="form-group">
@@ -601,6 +608,7 @@
                 vesting: 4,
                 signing: 0,
                 annualBonus: 0,
+                medical: 0,
                 benefits: 0,
                 relocation: 0,
                 firstYearTotal: 0,
@@ -628,6 +636,7 @@
             const vesting = parseFloat(document.getElementById(`${offerId}-vesting`).value) || 4;
             const signing = parseFloat(document.getElementById(`${offerId}-signing`).value) || 0;
             const annualBonus = parseFloat(document.getElementById(`${offerId}-annual-bonus`).value) || 0;
+            const medical = parseFloat(document.getElementById(`${offerId}-medical`).value) || 0;
             const benefits = parseFloat(document.getElementById(`${offerId}-benefits`).value) || 0;
             const relocation = parseFloat(document.getElementById(`${offerId}-relocation`).value) || 0;
 
@@ -638,10 +647,10 @@
             const annualStockValue = vesting > 0 ? stocks / vesting : 0;
 
             // Calculate first year total compensation
-            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + benefits + relocation;
+            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + medical + benefits + relocation;
 
             // Calculate ongoing annual compensation (after first year, no one-time bonuses)
-            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + benefits;
+            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + medical + benefits;
 
             offers[offerId] = {
                 company: company || `Offer ${offerId.split('-')[1]}`,
@@ -652,6 +661,7 @@
                 vesting: vesting,
                 signing: signing,
                 annualBonus: annualBonus,
+                medical: medical,
                 benefits: benefits,
                 relocation: relocation,
                 firstYearTotal: firstYearTotal,
@@ -689,7 +699,8 @@
                 { label: 'Vesting Period (Years)', key: 'vesting', isNumber: true },
                 { label: 'Signing Bonus', key: 'signing' },
                 { label: 'Annual Bonus', key: 'annualBonus' },
-                { label: 'Benefits (Annual)', key: 'benefits' },
+                { label: 'Medical Benefits (Annual)', key: 'medical' },
+                { label: 'Other Benefits (Annual)', key: 'benefits' },
                 { label: 'Relocation Bonus', key: 'relocation' },
                 { label: 'First Year Total', key: 'firstYearTotal', isBold: true },
                 { label: 'Ongoing Annual (Year 2+)', key: 'ongoingAnnual', isBold: true }
@@ -738,12 +749,13 @@
             const monthlyData = [];
             const monthlySalary = offer.salary / 12;
             const monthlyBonus = offer.annualBonus / 12;
+            const monthlyMedical = offer.medical / 12;
             const monthlyBenefits = offer.benefits / 12;
             const monthlyStock = offer.annualStockValue / 12;
             const vestingMonths = offer.vesting * 12;
 
             for (let month = 1; month <= months; month++) {
-                let monthTotal = monthlySalary + monthlyBenefits;
+                let monthTotal = monthlySalary + monthlyMedical + monthlyBenefits;
 
                 // Add signing bonus in month 1
                 if (month === 1) {
