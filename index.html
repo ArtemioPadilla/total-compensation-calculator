@@ -554,6 +554,23 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="${offerId}-vesting-type">Vesting Schedule Type</label>
+                    <select id="${offerId}-vesting-type" onchange="toggleVestingSchedule('${offerId}')">
+                        <option value="linear">Linear (Equal annually)</option>
+                        <option value="custom">Custom Schedule</option>
+                    </select>
+                </div>
+
+                <div id="${offerId}-custom-vesting" style="display: none;">
+                    <div class="form-group">
+                        <label>Custom Vesting Schedule</label>
+                        <div id="${offerId}-vesting-milestones"></div>
+                        <button type="button" class="btn-secondary" onclick="addVestingMilestone('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Milestone</button>
+                        <div class="help-text">Define percentage vesting at specific time points</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="${offerId}-signing">Signing Bonus</label>
                     <input type="number" id="${offerId}-signing" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
                     <div class="help-text">One-time signing bonus</div>
@@ -628,6 +645,13 @@
                     <div class="help-text">One-time relocation assistance</div>
                 </div>
 
+                <div class="form-group">
+                    <label>Custom Bonuses</label>
+                    <div id="${offerId}-custom-bonuses"></div>
+                    <button type="button" class="btn-secondary" onclick="addCustomBonus('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Bonus</button>
+                    <div class="help-text">Add specific bonuses at custom timeframes (e.g., 1-year retention bonus)</div>
+                </div>
+
                 <div class="total-display">
                     <h3>First Year Total</h3>
                     <div class="amount" id="${offerId}-total">$0</div>
@@ -649,6 +673,8 @@
                 stocks: 0,
                 annualStockValue: 0,
                 vesting: 4,
+                vestingType: 'linear',
+                vestingSchedule: [],
                 signing: 0,
                 annualBonus: 0,
                 aguinaldo: 0,
@@ -657,6 +683,7 @@
                 medical: 0,
                 benefits: 0,
                 relocation: 0,
+                customBonuses: [],
                 firstYearTotal: 0,
                 ongoingAnnual: 0
             };
@@ -671,6 +698,128 @@
             }
             delete offers[offerId];
             updateComparison();
+        }
+
+        function toggleVestingSchedule(offerId) {
+            const vestingType = document.getElementById(`${offerId}-vesting-type`).value;
+            const customVestingDiv = document.getElementById(`${offerId}-custom-vesting`);
+            
+            if (vestingType === 'custom') {
+                customVestingDiv.style.display = 'block';
+                // Initialize with one milestone if empty
+                if (!offers[offerId].vestingSchedule || offers[offerId].vestingSchedule.length === 0) {
+                    addVestingMilestone(offerId);
+                }
+            } else {
+                customVestingDiv.style.display = 'none';
+            }
+            offers[offerId].vestingType = vestingType;
+            updateOffer(offerId);
+        }
+
+        let vestingMilestoneCount = 0;
+        function addVestingMilestone(offerId) {
+            const container = document.getElementById(`${offerId}-vesting-milestones`);
+            const milestoneId = `${offerId}-milestone-${vestingMilestoneCount++}`;
+            
+            const milestoneDiv = document.createElement('div');
+            milestoneDiv.id = milestoneId;
+            milestoneDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            milestoneDiv.innerHTML = `
+                <input type="number" id="${milestoneId}-months" placeholder="Months" min="0" step="0.5" 
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                       onchange="updateVestingSchedule('${offerId}')">
+                <input type="number" id="${milestoneId}-percentage" placeholder="%" min="0" max="100" step="0.1" 
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                       onchange="updateVestingSchedule('${offerId}')">
+                <button type="button" onclick="removeVestingMilestone('${offerId}', '${milestoneId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+            `;
+            container.appendChild(milestoneDiv);
+        }
+
+        function removeVestingMilestone(offerId, milestoneId) {
+            const element = document.getElementById(milestoneId);
+            if (element) {
+                element.remove();
+            }
+            updateVestingSchedule(offerId);
+        }
+
+        function updateVestingSchedule(offerId) {
+            const container = document.getElementById(`${offerId}-vesting-milestones`);
+            const milestones = [];
+            
+            Array.from(container.children).forEach(child => {
+                const monthsInput = child.querySelector('[id$="-months"]');
+                const percentageInput = child.querySelector('[id$="-percentage"]');
+                
+                if (monthsInput && percentageInput) {
+                    const months = parseFloat(monthsInput.value) || 0;
+                    const percentage = parseFloat(percentageInput.value) || 0;
+                    if (months > 0 && percentage > 0) {
+                        milestones.push({ months, percentage });
+                    }
+                }
+            });
+            
+            offers[offerId].vestingSchedule = milestones;
+            updateOffer(offerId);
+        }
+
+        let customBonusCount = 0;
+        function addCustomBonus(offerId) {
+            const container = document.getElementById(`${offerId}-custom-bonuses`);
+            const bonusId = `${offerId}-bonus-${customBonusCount++}`;
+            
+            const bonusDiv = document.createElement('div');
+            bonusDiv.id = bonusId;
+            bonusDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            bonusDiv.innerHTML = `
+                <input type="text" id="${bonusId}-name" placeholder="Bonus name" 
+                       style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                       onchange="updateCustomBonuses('${offerId}')">
+                <input type="number" id="${bonusId}-amount" placeholder="Amount" min="0" 
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                       onchange="updateCustomBonuses('${offerId}')">
+                <input type="number" id="${bonusId}-month" placeholder="Month" min="1" max="120" 
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                       onchange="updateCustomBonuses('${offerId}')">
+                <button type="button" onclick="removeCustomBonus('${offerId}', '${bonusId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+            `;
+            container.appendChild(bonusDiv);
+        }
+
+        function removeCustomBonus(offerId, bonusId) {
+            const element = document.getElementById(bonusId);
+            if (element) {
+                element.remove();
+            }
+            updateCustomBonuses(offerId);
+        }
+
+        function updateCustomBonuses(offerId) {
+            const container = document.getElementById(`${offerId}-custom-bonuses`);
+            const bonuses = [];
+            
+            Array.from(container.children).forEach(child => {
+                const nameInput = child.querySelector('[id$="-name"]');
+                const amountInput = child.querySelector('[id$="-amount"]');
+                const monthInput = child.querySelector('[id$="-month"]');
+                
+                if (nameInput && amountInput && monthInput) {
+                    const name = nameInput.value || 'Custom Bonus';
+                    const amount = parseFloat(amountInput.value) || 0;
+                    const month = parseInt(monthInput.value) || 0;
+                    if (amount > 0 && month > 0) {
+                        bonuses.push({ name, amount, month });
+                    }
+                }
+            });
+            
+            offers[offerId].customBonuses = bonuses;
+            updateOffer(offerId);
         }
 
         function togglePrimaVacacionalMethod(offerId) {
@@ -745,22 +894,46 @@
             // Convert salary to annual if it's monthly
             const annualSalary = period === 'monthly' ? salary * 12 : salary;
 
-            // Calculate annual stock value
-            const annualStockValue = vesting > 0 ? stocks / vesting : 0;
+            // Calculate annual stock value based on vesting type
+            const vestingType = offers[offerId]?.vestingType || 'linear';
+            let annualStockValue;
+            
+            if (vestingType === 'custom' && offers[offerId]?.vestingSchedule?.length > 0) {
+                // For custom vesting, calculate annual value based on schedule
+                const schedule = offers[offerId].vestingSchedule;
+                const totalMonths = Math.max(...schedule.map(m => m.months));
+                const totalPercentage = schedule.reduce((sum, m) => sum + m.percentage, 0);
+                
+                // Average annual vesting based on custom schedule
+                annualStockValue = totalPercentage > 0 ? (stocks * (totalPercentage / 100)) / (totalMonths / 12) : 0;
+            } else {
+                // Linear vesting
+                annualStockValue = vesting > 0 ? stocks / vesting : 0;
+            }
+
+            // Calculate custom bonuses in first year (month 1-12)
+            let firstYearCustomBonuses = 0;
+            if (offers[offerId]?.customBonuses) {
+                firstYearCustomBonuses = offers[offerId].customBonuses
+                    .filter(b => b.month <= 12)
+                    .reduce((sum, b) => sum + b.amount, 0);
+            }
 
             // Calculate first year total compensation
-            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + aguinaldo + primaVacacional + medical + benefits + relocation;
+            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + aguinaldo + primaVacacional + medical + benefits + relocation + firstYearCustomBonuses;
 
             // Calculate ongoing annual compensation (after first year, no one-time bonuses)
             const ongoingAnnual = annualSalary + annualStockValue + annualBonus + aguinaldo + primaVacacional + medical + benefits;
 
             offers[offerId] = {
+                ...offers[offerId],
                 company: company || `Offer ${offerId.split('-')[1]}`,
                 position: position || 'Position',
                 salary: annualSalary,
                 stocks: stocks,
                 annualStockValue: annualStockValue,
                 vesting: vesting,
+                vestingType: vestingType,
                 signing: signing,
                 annualBonus: annualBonus,
                 aguinaldo: aguinaldo,
@@ -863,8 +1036,6 @@
             const monthlyBonus = offer.annualBonus / 12;
             const monthlyMedical = offer.medical / 12;
             const monthlyBenefits = offer.benefits / 12;
-            const monthlyStock = offer.annualStockValue / 12;
-            const vestingMonths = offer.vesting * 12;
 
             for (let month = 1; month <= months; month++) {
                 let monthTotal = monthlySalary + monthlyMedical + monthlyBenefits;
@@ -894,9 +1065,31 @@
                     monthTotal += offer.primaVacacional;
                 }
 
-                // Add stock vesting if within vesting period
-                if (month <= vestingMonths) {
-                    monthTotal += monthlyStock;
+                // Add stock vesting based on vesting type
+                if (offer.vestingType === 'custom' && offer.vestingSchedule && offer.vestingSchedule.length > 0) {
+                    // Custom vesting schedule
+                    offer.vestingSchedule.forEach(milestone => {
+                        if (month === milestone.months) {
+                            const vestAmount = offer.stocks * (milestone.percentage / 100);
+                            monthTotal += vestAmount;
+                        }
+                    });
+                } else {
+                    // Linear vesting
+                    const vestingMonths = offer.vesting * 12;
+                    const monthlyStock = offer.annualStockValue / 12;
+                    if (month <= vestingMonths) {
+                        monthTotal += monthlyStock;
+                    }
+                }
+
+                // Add custom bonuses
+                if (offer.customBonuses && offer.customBonuses.length > 0) {
+                    offer.customBonuses.forEach(bonus => {
+                        if (month === bonus.month) {
+                            monthTotal += bonus.amount;
+                        }
+                    });
                 }
 
                 monthlyData.push(monthTotal);
@@ -1219,9 +1412,29 @@
                     }
                     events.push(`Months ${bonusMonths.join(', ')}: Prima Vacacional of ${formatCurrency(offer.primaVacacional)}`);
                 }
+                
+                // Add stock vesting information
                 if (offer.stocks > 0) {
-                    const vestingEnd = Math.min(offer.vesting * 12, months);
-                    events.push(`Months 1-${vestingEnd}: Stock vesting (${formatCurrency(offer.annualStockValue)}/year)`);
+                    if (offer.vestingType === 'custom' && offer.vestingSchedule && offer.vestingSchedule.length > 0) {
+                        // Custom vesting schedule
+                        offer.vestingSchedule.forEach(milestone => {
+                            const vestAmount = offer.stocks * (milestone.percentage / 100);
+                            events.push(`Month ${milestone.months}: Stock vesting of ${formatCurrency(vestAmount)} (${milestone.percentage}%)`);
+                        });
+                    } else {
+                        // Linear vesting
+                        const vestingEnd = Math.min(offer.vesting * 12, months);
+                        events.push(`Months 1-${vestingEnd}: Stock vesting (${formatCurrency(offer.annualStockValue)}/year)`);
+                    }
+                }
+                
+                // Add custom bonuses
+                if (offer.customBonuses && offer.customBonuses.length > 0) {
+                    offer.customBonuses.forEach(bonus => {
+                        if (bonus.month <= months) {
+                            events.push(`Month ${bonus.month}: ${bonus.name} of ${formatCurrency(bonus.amount)}`);
+                        }
+                    });
                 }
 
                 const li = document.createElement('li');
