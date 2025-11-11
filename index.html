@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Compensation Calculator - Compare Job Offers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .offers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .offer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .offer-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[type="number"] {
+            text-align: right;
+        }
+
+        .total-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .total-display h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .total-display .amount {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-remove {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background: #da190b;
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .comparison-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table th {
+            background: #f5f5f5;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .best-offer {
+            background: #e8f5e9 !important;
+        }
+
+        .winner-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .add-offer-btn {
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .offers-container {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 14px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px 5px;
+            }
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .info-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .info-section ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .info-section li {
+            color: #555;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .chart-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-controls label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .chart-controls select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .chart-controls select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-top: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .chart-svg {
+            width: 100%;
+            min-width: 800px;
+            height: 100%;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
+
+        .chart-area {
+            opacity: 0.2;
+        }
+
+        .chart-point {
+            r: 4;
+            fill: white;
+            stroke-width: 2;
+            cursor: pointer;
+        }
+
+        .chart-point:hover {
+            r: 6;
+        }
+
+        .chart-axis {
+            stroke: #ccc;
+            stroke-width: 1;
+        }
+
+        .chart-grid {
+            stroke: #e0e0e0;
+            stroke-width: 1;
+            stroke-dasharray: 5,5;
+        }
+
+        .chart-label {
+            font-size: 11px;
+            fill: #666;
+        }
+
+        .chart-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            max-width: 250px;
+        }
+
+        .chart-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .chart-legend h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .chart-legend ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .chart-legend li {
+            padding: 5px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 12px;
+            margin-right: 8px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💼 Total Compensation Calculator</h1>
+            <p>Compare job offers with all compensation dimensions</p>
+        </header>
+
+        <div id="offersContainer" class="offers-container">
+            <!-- Job offer cards will be added here dynamically -->
+        </div>
+
+        <button class="btn-primary add-offer-btn" onclick="addOffer()">+ Add Job Offer</button>
+
+        <div id="comparisonSection" class="comparison-section" style="display: none;">
+            <h2>📊 Comparison Summary</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th id="offerHeaders"></th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="chartSection" class="chart-section" style="display: none;">
+            <h2>📈 Compensation Over Time</h2>
+            
+            <div class="chart-controls">
+                <label for="timeRange">Time Range:</label>
+                <select id="timeRange" onchange="updateChart()">
+                    <option value="12">1 Year</option>
+                    <option value="24">2 Years</option>
+                    <option value="36">3 Years</option>
+                    <option value="48" selected>4 Years</option>
+                    <option value="60">5 Years</option>
+                </select>
+
+                <label for="chartType">Chart Type:</label>
+                <select id="chartType" onchange="updateChart()">
+                    <option value="line">Line Chart</option>
+                    <option value="bar">Bar Chart</option>
+                    <option value="stacked">Stacked Area</option>
+                </select>
+
+                <label for="viewType">View:</label>
+                <select id="viewType" onchange="updateChart()">
+                    <option value="monthly">Monthly</option>
+                    <option value="cumulative">Cumulative</option>
+                </select>
+            </div>
+
+            <div class="chart-container">
+                <svg id="compensationChart" class="chart-svg"></svg>
+                <div id="chartTooltip" class="chart-tooltip"></div>
+            </div>
+
+            <div class="chart-legend">
+                <h4>Compensation Events Timeline:</h4>
+                <ul id="chartLegendList">
+                    <!-- Will be populated dynamically -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>How to Use</h3>
+            <ul>
+                <li><strong>Add Offers:</strong> Click "+ Add Job Offer" to create a new offer card</li>
+                <li><strong>Enter Details:</strong> Fill in all compensation components for each offer</li>
+                <li><strong>Annual vs Monthly:</strong> Choose whether your salary is annual or monthly</li>
+                <li><strong>Stock Value:</strong> Enter the total value of stock grants (RSUs, options, etc.)</li>
+                <li><strong>Vesting Period:</strong> Specify how many years your stocks vest over</li>
+                <li><strong>Bonuses:</strong> Include signing bonuses and annual performance bonuses</li>
+                <li><strong>Benefits:</strong> Add monetary value of benefits (401k match, health insurance, etc.)</li>
+                <li><strong>Compare:</strong> The comparison table shows all offers side-by-side with the best values highlighted</li>
+                <li><strong>Visualize:</strong> View interactive charts showing compensation over time, including stock vesting schedules, bonuses, and other time-based events</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let offerCount = 0;
+        let offers = {};
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function addOffer() {
+            offerCount++;
+            const offerId = `offer-${offerCount}`;
+            
+            const offerCard = document.createElement('div');
+            offerCard.className = 'offer-card';
+            offerCard.id = offerId;
+            offerCard.innerHTML = `
+                <h2>Job Offer ${offerCount}</h2>
+                
+                <div class="form-group">
+                    <label for="${offerId}-company">Company Name</label>
+                    <input type="text" id="${offerId}-company" placeholder="e.g., TechCorp Inc." onchange="updateOffer('${offerId}')">
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-position">Position</label>
+                    <input type="text" id="${offerId}-position" placeholder="e.g., Senior Software Engineer" onchange="updateOffer('${offerId}')">
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-salary">Base Salary</label>
+                    <input type="number" id="${offerId}-salary" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Your base annual or monthly salary</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-period">Salary Period</label>
+                    <select id="${offerId}-period" onchange="updateOffer('${offerId}')">
+                        <option value="annual">Annual</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-stocks">Stock Value (Total)</label>
+                    <input type="number" id="${offerId}-stocks" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Total value of RSUs, stock options, or equity grants</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-vesting">Vesting Period (Years)</label>
+                    <input type="number" id="${offerId}-vesting" placeholder="4" min="0" step="0.5" value="4" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">How many years stocks vest over</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-signing">Signing Bonus</label>
+                    <input type="number" id="${offerId}-signing" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">One-time signing bonus</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-annual-bonus">Annual Bonus</label>
+                    <input type="number" id="${offerId}-annual-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Expected yearly performance bonus</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-benefits">Annual Benefits Value</label>
+                    <input type="number" id="${offerId}-benefits" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">401k match, health insurance, etc. (annual value)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-relocation">Relocation Bonus</label>
+                    <input type="number" id="${offerId}-relocation" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">One-time relocation assistance</div>
+                </div>
+
+                <div class="total-display">
+                    <h3>First Year Total</h3>
+                    <div class="amount" id="${offerId}-total">$0</div>
+                </div>
+
+                <div class="button-container">
+                    <button class="btn-secondary" onclick="updateOffer('${offerId}')">Calculate</button>
+                    <button class="btn-remove" onclick="removeOffer('${offerId}')">Remove</button>
+                </div>
+            `;
+
+            document.getElementById('offersContainer').appendChild(offerCard);
+            
+            offers[offerId] = {
+                company: '',
+                position: '',
+                salary: 0,
+                period: 'annual',
+                stocks: 0,
+                annualStockValue: 0,
+                vesting: 4,
+                signing: 0,
+                annualBonus: 0,
+                benefits: 0,
+                relocation: 0,
+                firstYearTotal: 0,
+                ongoingAnnual: 0
+            };
+
+            updateComparison();
+        }
+
+        function removeOffer(offerId) {
+            const element = document.getElementById(offerId);
+            if (element) {
+                element.remove();
+            }
+            delete offers[offerId];
+            updateComparison();
+        }
+
+        function updateOffer(offerId) {
+            const company = document.getElementById(`${offerId}-company`).value;
+            const position = document.getElementById(`${offerId}-position`).value;
+            const salary = parseFloat(document.getElementById(`${offerId}-salary`).value) || 0;
+            const period = document.getElementById(`${offerId}-period`).value;
+            const stocks = parseFloat(document.getElementById(`${offerId}-stocks`).value) || 0;
+            const vesting = parseFloat(document.getElementById(`${offerId}-vesting`).value) || 4;
+            const signing = parseFloat(document.getElementById(`${offerId}-signing`).value) || 0;
+            const annualBonus = parseFloat(document.getElementById(`${offerId}-annual-bonus`).value) || 0;
+            const benefits = parseFloat(document.getElementById(`${offerId}-benefits`).value) || 0;
+            const relocation = parseFloat(document.getElementById(`${offerId}-relocation`).value) || 0;
+
+            // Convert salary to annual if it's monthly
+            const annualSalary = period === 'monthly' ? salary * 12 : salary;
+
+            // Calculate annual stock value
+            const annualStockValue = vesting > 0 ? stocks / vesting : 0;
+
+            // Calculate first year total compensation
+            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + benefits + relocation;
+
+            // Calculate ongoing annual compensation (after first year, no one-time bonuses)
+            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + benefits;
+
+            offers[offerId] = {
+                company: company || `Offer ${offerId.split('-')[1]}`,
+                position: position || 'Position',
+                salary: annualSalary,
+                stocks: stocks,
+                annualStockValue: annualStockValue,
+                vesting: vesting,
+                signing: signing,
+                annualBonus: annualBonus,
+                benefits: benefits,
+                relocation: relocation,
+                firstYearTotal: firstYearTotal,
+                ongoingAnnual: ongoingAnnual
+            };
+
+            // Update display
+            document.getElementById(`${offerId}-total`).textContent = formatCurrency(firstYearTotal);
+
+            updateComparison();
+        }
+
+        function updateComparison() {
+            const offerKeys = Object.keys(offers);
+            
+            if (offerKeys.length === 0) {
+                document.getElementById('comparisonSection').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('comparisonSection').style.display = 'block';
+
+            // Create headers
+            const headers = offerKeys.map(key => {
+                const offer = offers[key];
+                return `<th>${offer.company}<br><small>${offer.position}</small></th>`;
+            }).join('');
+            document.getElementById('offerHeaders').innerHTML = headers;
+
+            // Create comparison rows
+            const rows = [
+                { label: 'Base Salary (Annual)', key: 'salary' },
+                { label: 'Stock Value (Total)', key: 'stocks' },
+                { label: 'Stock Value (Annual)', key: 'annualStockValue' },
+                { label: 'Vesting Period (Years)', key: 'vesting', isNumber: true },
+                { label: 'Signing Bonus', key: 'signing' },
+                { label: 'Annual Bonus', key: 'annualBonus' },
+                { label: 'Benefits (Annual)', key: 'benefits' },
+                { label: 'Relocation Bonus', key: 'relocation' },
+                { label: 'First Year Total', key: 'firstYearTotal', isBold: true },
+                { label: 'Ongoing Annual (Year 2+)', key: 'ongoingAnnual', isBold: true }
+            ];
+
+            let tableHTML = '';
+            rows.forEach(row => {
+                const values = offerKeys.map(key => offers[key][row.key]);
+                const maxValue = Math.max(...values);
+                
+                tableHTML += `<tr>`;
+                tableHTML += `<td>${row.label}</td>`;
+                
+                offerKeys.forEach(key => {
+                    const value = offers[key][row.key];
+                    const isBest = row.isBold && value === maxValue && value > 0;
+                    const cellClass = isBest ? 'best-offer' : '';
+                    const displayValue = row.isNumber ? value : formatCurrency(value);
+                    const badge = isBest ? '<span class="winner-badge">BEST</span>' : '';
+                    
+                    tableHTML += `<td class="${cellClass}"><strong>${displayValue}</strong>${badge}</td>`;
+                });
+                
+                tableHTML += `</tr>`;
+            });
+
+            document.getElementById('comparisonBody').innerHTML = tableHTML;
+            
+            // Update chart if there are offers
+            updateChart();
+        }
+
+        // Chart variables
+        const chartColors = [
+            '#667eea',
+            '#764ba2',
+            '#ed64a6',
+            '#ff9f40',
+            '#4bc0c0',
+            '#9966ff',
+            '#ff6384',
+            '#36a2eb'
+        ];
+
+        function generateMonthlyData(offer, months) {
+            const monthlyData = [];
+            const monthlySalary = offer.salary / 12;
+            const monthlyBonus = offer.annualBonus / 12;
+            const monthlyBenefits = offer.benefits / 12;
+            const monthlyStock = offer.annualStockValue / 12;
+            const vestingMonths = offer.vesting * 12;
+
+            for (let month = 1; month <= months; month++) {
+                let monthTotal = monthlySalary + monthlyBenefits;
+
+                // Add signing bonus in month 1
+                if (month === 1) {
+                    monthTotal += offer.signing;
+                }
+
+                // Add relocation bonus in month 1
+                if (month === 1) {
+                    monthTotal += offer.relocation;
+                }
+
+                // Add annual bonus at month 12, 24, 36, etc.
+                if (month % 12 === 0) {
+                    monthTotal += offer.annualBonus;
+                }
+
+                // Add stock vesting if within vesting period
+                if (month <= vestingMonths) {
+                    monthTotal += monthlyStock;
+                }
+
+                monthlyData.push(monthTotal);
+            }
+
+            return monthlyData;
+        }
+
+        function generateCumulativeData(monthlyData) {
+            const cumulativeData = [];
+            let sum = 0;
+            for (const value of monthlyData) {
+                sum += value;
+                cumulativeData.push(sum);
+            }
+            return cumulativeData;
+        }
+
+        function getMonthLabels(months) {
+            const labels = [];
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            for (let i = 1; i <= months; i++) {
+                const year = Math.floor((i - 1) / 12) + 1;
+                const monthIndex = (i - 1) % 12;
+                labels.push(`${monthNames[monthIndex]} Y${year}`);
+            }
+            
+            return labels;
+        }
+
+        function updateChart() {
+            const offerKeys = Object.keys(offers);
+            
+            if (offerKeys.length === 0) {
+                document.getElementById('chartSection').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('chartSection').style.display = 'block';
+
+            const months = parseInt(document.getElementById('timeRange').value);
+            const chartType = document.getElementById('chartType').value;
+            const viewType = document.getElementById('viewType').value;
+            const labels = getMonthLabels(months);
+
+            const datasets = offerKeys.map((key, index) => {
+                const offer = offers[key];
+                const monthlyData = generateMonthlyData(offer, months);
+                const data = viewType === 'cumulative' ? generateCumulativeData(monthlyData) : monthlyData;
+                
+                return {
+                    label: `${offer.company} - ${offer.position}`,
+                    data: data,
+                    color: chartColors[index % chartColors.length]
+                };
+            });
+
+            drawSVGChart(datasets, labels, months, chartType);
+            updateChartLegend(offerKeys, months);
+        }
+
+        function drawSVGChart(datasets, labels, months, chartType) {
+            const svg = document.getElementById('compensationChart');
+            const tooltip = document.getElementById('chartTooltip');
+            
+            // Clear existing content
+            svg.innerHTML = '';
+            
+            // SVG dimensions
+            const width = Math.max(800, months * 20);
+            const height = 400;
+            const margin = { top: 40, right: 30, bottom: 60, left: 80 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            svg.style.minWidth = `${width}px`;
+            
+            // Find max value for scaling
+            let maxValue = 0;
+            datasets.forEach(dataset => {
+                const max = Math.max(...dataset.data);
+                if (max > maxValue) maxValue = max;
+            });
+            
+            // If all values are 0, set a default scale
+            if (maxValue === 0) maxValue = 100000;
+            
+            maxValue = maxValue * 1.1; // Add 10% padding
+            
+            // Create scales
+            const xScale = (index) => {
+                if (months === 1) return margin.left + chartWidth / 2;
+                return margin.left + (index / (months - 1)) * chartWidth;
+            };
+            const yScale = (value) => margin.top + chartHeight - (value / maxValue) * chartHeight;
+            
+            // Draw grid lines
+            const gridLines = 5;
+            for (let i = 0; i <= gridLines; i++) {
+                const y = margin.top + (i / gridLines) * chartHeight;
+                const value = maxValue * (1 - i / gridLines);
+                
+                // Horizontal grid line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', margin.left);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', margin.left + chartWidth);
+                line.setAttribute('y2', y);
+                line.setAttribute('class', 'chart-grid');
+                svg.appendChild(line);
+                
+                // Y-axis label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', margin.left - 10);
+                text.setAttribute('y', y + 4);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('class', 'chart-label');
+                text.textContent = '$' + (value / 1000).toFixed(0) + 'k';
+                svg.appendChild(text);
+            }
+            
+            // Draw axes
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', margin.left);
+            xAxis.setAttribute('y1', margin.top + chartHeight);
+            xAxis.setAttribute('x2', margin.left + chartWidth);
+            xAxis.setAttribute('y2', margin.top + chartHeight);
+            xAxis.setAttribute('class', 'chart-axis');
+            svg.appendChild(xAxis);
+            
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', margin.left);
+            yAxis.setAttribute('y1', margin.top);
+            yAxis.setAttribute('x2', margin.left);
+            yAxis.setAttribute('y2', margin.top + chartHeight);
+            yAxis.setAttribute('class', 'chart-axis');
+            svg.appendChild(yAxis);
+            
+            // Draw X-axis labels (show every nth label to avoid crowding)
+            const labelFrequency = months > 24 ? 3 : (months > 12 ? 2 : 1);
+            for (let i = 0; i < months; i++) {
+                if (i % labelFrequency === 0 || i === months - 1) {
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', xScale(i));
+                    text.setAttribute('y', margin.top + chartHeight + 20);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('class', 'chart-label');
+                    text.setAttribute('transform', `rotate(-45, ${xScale(i)}, ${margin.top + chartHeight + 20})`);
+                    text.textContent = labels[i];
+                    svg.appendChild(text);
+                }
+            }
+            
+            // Draw data
+            if (chartType === 'bar') {
+                const barWidth = chartWidth / months / datasets.length * 0.8;
+                
+                datasets.forEach((dataset, datasetIndex) => {
+                    dataset.data.forEach((value, index) => {
+                        const x = xScale(index) - (datasets.length * barWidth / 2) + (datasetIndex * barWidth);
+                        const y = yScale(value);
+                        const h = margin.top + chartHeight - y;
+                        
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('x', x);
+                        rect.setAttribute('y', y);
+                        rect.setAttribute('width', barWidth);
+                        rect.setAttribute('height', h);
+                        rect.setAttribute('fill', dataset.color);
+                        rect.setAttribute('opacity', '0.7');
+                        rect.style.cursor = 'pointer';
+                        
+                        rect.addEventListener('mouseenter', (e) => {
+                            tooltip.style.display = 'block';
+                            tooltip.innerHTML = `<strong>${dataset.label}</strong><br>${labels[index]}<br>${formatCurrency(value)}`;
+                        });
+                        
+                        rect.addEventListener('mousemove', (e) => {
+                            tooltip.style.left = (e.pageX + 10) + 'px';
+                            tooltip.style.top = (e.pageY - 30) + 'px';
+                        });
+                        
+                        rect.addEventListener('mouseleave', () => {
+                            tooltip.style.display = 'none';
+                        });
+                        
+                        svg.appendChild(rect);
+                    });
+                });
+            } else {
+                // Line chart
+                datasets.forEach((dataset, datasetIndex) => {
+                    // Create path for line
+                    let pathData = '';
+                    let areaData = '';
+                    
+                    dataset.data.forEach((value, index) => {
+                        const x = xScale(index);
+                        const y = yScale(value);
+                        
+                        if (index === 0) {
+                            pathData = `M ${x} ${y}`;
+                            if (chartType === 'stacked') {
+                                areaData = `M ${x} ${margin.top + chartHeight} L ${x} ${y}`;
+                            }
+                        } else {
+                            pathData += ` L ${x} ${y}`;
+                            if (chartType === 'stacked') {
+                                areaData += ` L ${x} ${y}`;
+                            }
+                        }
+                    });
+                    
+                    // Draw area for stacked chart
+                    if (chartType === 'stacked') {
+                        areaData += ` L ${xScale(dataset.data.length - 1)} ${margin.top + chartHeight} Z`;
+                        const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        area.setAttribute('d', areaData);
+                        area.setAttribute('fill', dataset.color);
+                        area.setAttribute('class', 'chart-area');
+                        svg.appendChild(area);
+                    }
+                    
+                    // Draw line
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    path.setAttribute('stroke', dataset.color);
+                    path.setAttribute('class', 'chart-line');
+                    svg.appendChild(path);
+                    
+                    // Draw points
+                    if (months <= 36) {
+                        dataset.data.forEach((value, index) => {
+                            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                            circle.setAttribute('cx', xScale(index));
+                            circle.setAttribute('cy', yScale(value));
+                            circle.setAttribute('stroke', dataset.color);
+                            circle.setAttribute('class', 'chart-point');
+                            
+                            circle.addEventListener('mouseenter', (e) => {
+                                tooltip.style.display = 'block';
+                                tooltip.innerHTML = `<strong>${dataset.label}</strong><br>${labels[index]}<br>${formatCurrency(value)}`;
+                            });
+                            
+                            circle.addEventListener('mousemove', (e) => {
+                                tooltip.style.left = (e.pageX + 10) + 'px';
+                                tooltip.style.top = (e.pageY - 30) + 'px';
+                            });
+                            
+                            circle.addEventListener('mouseleave', () => {
+                                tooltip.style.display = 'none';
+                            });
+                            
+                            svg.appendChild(circle);
+                        });
+                    }
+                });
+            }
+            
+            // Draw legend
+            const legendY = 20;
+            const legendX = margin.left + 10;
+            datasets.forEach((dataset, index) => {
+                const legendItemX = legendX + (index * 200);
+                
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', legendItemX);
+                rect.setAttribute('y', legendY - 8);
+                rect.setAttribute('width', 12);
+                rect.setAttribute('height', 12);
+                rect.setAttribute('fill', dataset.color);
+                svg.appendChild(rect);
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', legendItemX + 18);
+                text.setAttribute('y', legendY + 2);
+                text.setAttribute('class', 'chart-label');
+                text.setAttribute('font-size', '12');
+                text.textContent = dataset.label;
+                svg.appendChild(text);
+            });
+        }
+
+        function updateChartLegend(offerKeys, months) {
+            const legendList = document.getElementById('chartLegendList');
+            legendList.innerHTML = '';
+
+            offerKeys.forEach((key, index) => {
+                const offer = offers[key];
+                const color = chartColors[index % chartColors.length];
+                const events = [];
+
+                // Document key compensation events
+                if (offer.signing > 0) {
+                    events.push(`Month 1: Signing bonus of ${formatCurrency(offer.signing)}`);
+                }
+                if (offer.relocation > 0) {
+                    events.push(`Month 1: Relocation bonus of ${formatCurrency(offer.relocation)}`);
+                }
+                if (offer.annualBonus > 0) {
+                    const bonusMonths = [];
+                    for (let m = 12; m <= months; m += 12) {
+                        bonusMonths.push(m);
+                    }
+                    events.push(`Months ${bonusMonths.join(', ')}: Annual bonus of ${formatCurrency(offer.annualBonus)}`);
+                }
+                if (offer.stocks > 0) {
+                    const vestingEnd = Math.min(offer.vesting * 12, months);
+                    events.push(`Months 1-${vestingEnd}: Stock vesting (${formatCurrency(offer.annualStockValue)}/year)`);
+                }
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong><span class="legend-color" style="background-color: ${color};"></span>${offer.company}</strong>
+                    <ul style="margin-left: 28px; margin-top: 5px;">
+                        ${events.map(e => `<li style="font-size: 13px;">${e}</li>`).join('')}
+                    </ul>
+                `;
+                legendList.appendChild(li);
+            });
+        }
+
+        // Initialize with one offer
+        window.onload = function() {
+            addOffer();
+        };
+    </script>
+</body>
+</html>
