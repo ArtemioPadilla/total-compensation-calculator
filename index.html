@@ -726,14 +726,20 @@
             milestoneDiv.id = milestoneId;
             milestoneDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
             milestoneDiv.innerHTML = `
-                <input type="number" id="${milestoneId}-months" placeholder="Months" min="0" step="0.5" 
-                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
-                       onchange="updateVestingSchedule('${offerId}')">
-                <input type="number" id="${milestoneId}-percentage" placeholder="%" min="0" max="100" step="0.1" 
-                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
-                       onchange="updateVestingSchedule('${offerId}')">
+                <div style="flex: 1;">
+                    <input type="number" id="${milestoneId}-months" placeholder="12" min="0" step="0.5" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateVestingSchedule('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Months</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${milestoneId}-percentage" placeholder="25" min="0" max="100" step="0.1" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateVestingSchedule('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Percentage (%)</div>
+                </div>
                 <button type="button" onclick="removeVestingMilestone('${offerId}', '${milestoneId}')" 
-                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-start;">✕</button>
             `;
             container.appendChild(milestoneDiv);
         }
@@ -774,19 +780,28 @@
             
             const bonusDiv = document.createElement('div');
             bonusDiv.id = bonusId;
-            bonusDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            bonusDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start;';
             bonusDiv.innerHTML = `
-                <input type="text" id="${bonusId}-name" placeholder="Bonus name" 
-                       style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
-                       onchange="updateCustomBonuses('${offerId}')">
-                <input type="number" id="${bonusId}-amount" placeholder="Amount" min="0" 
-                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
-                       onchange="updateCustomBonuses('${offerId}')">
-                <input type="number" id="${bonusId}-month" placeholder="Month" min="1" max="120" 
-                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
-                       onchange="updateCustomBonuses('${offerId}')">
+                <div style="flex: 2;">
+                    <input type="text" id="${bonusId}-name" placeholder="Retention Bonus" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Bonus Name</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${bonusId}-amount" placeholder="10000" min="0" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Amount ($)</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${bonusId}-month" placeholder="12" min="1" max="120" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Month</div>
+                </div>
                 <button type="button" onclick="removeCustomBonus('${offerId}', '${bonusId}')" 
-                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">✕</button>
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0;">✕</button>
             `;
             container.appendChild(bonusDiv);
         }
