@@ -4,7 +4,7 @@ A static web application to compare job offers with all compensation dimensions 
 
 ## Features
 
-- 💰 **Comprehensive Compensation Analysis**: Track base salary, stock grants, signing bonuses, annual bonuses, benefits, and relocation assistance
+- 💰 **Comprehensive Compensation Analysis**: Track base salary, stock grants, signing bonuses, annual bonuses, medical benefits, other benefits, and relocation assistance
 - 📊 **Side-by-Side Comparison**: Compare multiple job offers in an easy-to-read comparison table
 - 🏆 **Best Offer Highlighting**: Automatically highlights the best values in green with a "BEST" badge
 - 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
@@ -22,7 +22,8 @@ A static web application to compare job offers with all compensation dimensions 
    - Vesting period (how many years stocks vest over)
    - Signing bonus (one-time)
    - Annual bonus (yearly)
-   - Benefits value (annual, e.g., 401k match, health insurance)
+   - Medical benefits (annual, e.g., health, dental, vision insurance)
+   - Other benefits (annual, e.g., 401k match, gym, commuter)
    - Relocation bonus (one-time)
 4. **Calculate**: Click "Calculate" to update the totals
 5. **Compare**: View the comparison table to see all offers side-by-side
