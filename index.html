@@ -483,8 +483,9 @@
                 <li><strong>Annual vs Monthly:</strong> Choose whether your salary is annual or monthly</li>
                 <li><strong>Stock Value:</strong> Enter the total value of stock grants (RSUs, options, etc.)</li>
                 <li><strong>Vesting Period:</strong> Specify how many years your stocks vest over</li>
-                <li><strong>Bonuses:</strong> Include signing bonuses, annual performance bonuses, Christmas bonus (prima vacacional), and PTO bonus</li>
+                <li><strong>Bonuses:</strong> Include signing bonuses, annual performance bonuses, aguinaldo (Christmas bonus), and prima vacacional (vacation bonus)</li>
                 <li><strong>PTO Days:</strong> Enter the number of paid time off days per year</li>
+                <li><strong>Prima Vacacional:</strong> Enter the total amount directly, or calculate it from vacation days and percentage of daily salary</li>
                 <li><strong>Medical Benefits:</strong> Enter the annual value of health, dental, and vision insurance</li>
                 <li><strong>Other Benefits:</strong> Add monetary value of other benefits (401k match, gym, commuter, etc.)</li>
                 <li><strong>Compare:</strong> The comparison table shows all offers side-by-side with the best values highlighted</li>
@@ -565,9 +566,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="${offerId}-christmas-bonus">Christmas Bonus (Prima Vacacional)</label>
-                    <input type="number" id="${offerId}-christmas-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Annual Christmas/holiday bonus</div>
+                    <label for="${offerId}-aguinaldo">Aguinaldo (Christmas Bonus)</label>
+                    <input type="number" id="${offerId}-aguinaldo" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Annual Christmas bonus (aguinaldo)</div>
                 </div>
 
                 <div class="form-group">
@@ -577,9 +578,36 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="${offerId}-pto-bonus">PTO Bonus (Annual)</label>
-                    <input type="number" id="${offerId}-pto-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Annual vacation bonus or PTO cash-out</div>
+                    <label for="${offerId}-prima-calc-method">Prima Vacacional Calculation</label>
+                    <select id="${offerId}-prima-calc-method" onchange="togglePrimaVacacionalMethod('${offerId}')">
+                        <option value="direct">Direct Amount</option>
+                        <option value="calculated">Calculate from Days & Percentage</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="${offerId}-prima-direct" style="display: block;">
+                    <label for="${offerId}-prima-vacacional">Prima Vacacional (Total)</label>
+                    <input type="number" id="${offerId}-prima-vacacional" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Annual vacation bonus (prima vacacional)</div>
+                </div>
+
+                <div id="${offerId}-prima-calculated" style="display: none;">
+                    <div class="form-group">
+                        <label for="${offerId}-prima-days">Vacation Days for Prima</label>
+                        <input type="number" id="${offerId}-prima-days" placeholder="0" min="0" step="0.5" onchange="calculatePrimaVacacional('${offerId}')">
+                        <div class="help-text">Number of vacation days used for calculation</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="${offerId}-prima-percentage">Prima Percentage (%)</label>
+                        <input type="number" id="${offerId}-prima-percentage" placeholder="25" min="0" max="100" step="0.1" onchange="calculatePrimaVacacional('${offerId}')">
+                        <div class="help-text">Percentage of daily salary (e.g., 25%)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Calculated Prima Vacacional</label>
+                        <div id="${offerId}-prima-calculated-value" style="font-weight: bold; color: #667eea; padding: 10px; background: #f5f5f5; border-radius: 6px;">$0</div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -623,9 +651,9 @@
                 vesting: 4,
                 signing: 0,
                 annualBonus: 0,
-                christmasBonus: 0,
+                aguinaldo: 0,
                 ptoDays: 0,
-                ptoBonus: 0,
+                primaVacacional: 0,
                 medical: 0,
                 benefits: 0,
                 relocation: 0,
@@ -645,6 +673,44 @@
             updateComparison();
         }
 
+        function togglePrimaVacacionalMethod(offerId) {
+            const method = document.getElementById(`${offerId}-prima-calc-method`).value;
+            const directDiv = document.getElementById(`${offerId}-prima-direct`);
+            const calculatedDiv = document.getElementById(`${offerId}-prima-calculated`);
+            
+            if (method === 'direct') {
+                directDiv.style.display = 'block';
+                calculatedDiv.style.display = 'none';
+            } else {
+                directDiv.style.display = 'none';
+                calculatedDiv.style.display = 'block';
+                calculatePrimaVacacional(offerId);
+            }
+            updateOffer(offerId);
+        }
+
+        function calculatePrimaVacacional(offerId) {
+            const salary = parseFloat(document.getElementById(`${offerId}-salary`).value) || 0;
+            const period = document.getElementById(`${offerId}-period`).value;
+            const primaDays = parseFloat(document.getElementById(`${offerId}-prima-days`).value) || 0;
+            const primaPercentage = parseFloat(document.getElementById(`${offerId}-prima-percentage`).value) || 0;
+            
+            // Convert salary to annual if it's monthly
+            const annualSalary = period === 'monthly' ? salary * 12 : salary;
+            
+            // Calculate daily salary (assuming 365 days in a year)
+            const dailySalary = annualSalary / 365;
+            
+            // Calculate prima vacacional: days × daily salary × percentage
+            const primaVacacional = primaDays * dailySalary * (primaPercentage / 100);
+            
+            // Update the calculated value display
+            document.getElementById(`${offerId}-prima-calculated-value`).textContent = formatCurrency(primaVacacional);
+            
+            // Update the hidden input or trigger recalculation
+            updateOffer(offerId);
+        }
+
         function updateOffer(offerId) {
             const company = document.getElementById(`${offerId}-company`).value;
             const position = document.getElementById(`${offerId}-position`).value;
@@ -654,9 +720,24 @@
             const vesting = parseFloat(document.getElementById(`${offerId}-vesting`).value) || 4;
             const signing = parseFloat(document.getElementById(`${offerId}-signing`).value) || 0;
             const annualBonus = parseFloat(document.getElementById(`${offerId}-annual-bonus`).value) || 0;
-            const christmasBonus = parseFloat(document.getElementById(`${offerId}-christmas-bonus`).value) || 0;
+            const aguinaldo = parseFloat(document.getElementById(`${offerId}-aguinaldo`).value) || 0;
             const ptoDays = parseFloat(document.getElementById(`${offerId}-pto-days`).value) || 0;
-            const ptoBonus = parseFloat(document.getElementById(`${offerId}-pto-bonus`).value) || 0;
+            
+            // Get prima vacacional based on calculation method
+            const primaCalcMethod = document.getElementById(`${offerId}-prima-calc-method`).value;
+            let primaVacacional = 0;
+            
+            if (primaCalcMethod === 'direct') {
+                primaVacacional = parseFloat(document.getElementById(`${offerId}-prima-vacacional`).value) || 0;
+            } else {
+                // Calculate from days and percentage
+                const primaDays = parseFloat(document.getElementById(`${offerId}-prima-days`).value) || 0;
+                const primaPercentage = parseFloat(document.getElementById(`${offerId}-prima-percentage`).value) || 0;
+                const annualSalary = period === 'monthly' ? salary * 12 : salary;
+                const dailySalary = annualSalary / 365;
+                primaVacacional = primaDays * dailySalary * (primaPercentage / 100);
+            }
+            
             const medical = parseFloat(document.getElementById(`${offerId}-medical`).value) || 0;
             const benefits = parseFloat(document.getElementById(`${offerId}-benefits`).value) || 0;
             const relocation = parseFloat(document.getElementById(`${offerId}-relocation`).value) || 0;
@@ -668,10 +749,10 @@
             const annualStockValue = vesting > 0 ? stocks / vesting : 0;
 
             // Calculate first year total compensation
-            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + christmasBonus + ptoBonus + medical + benefits + relocation;
+            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + aguinaldo + primaVacacional + medical + benefits + relocation;
 
             // Calculate ongoing annual compensation (after first year, no one-time bonuses)
-            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + christmasBonus + ptoBonus + medical + benefits;
+            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + aguinaldo + primaVacacional + medical + benefits;
 
             offers[offerId] = {
                 company: company || `Offer ${offerId.split('-')[1]}`,
@@ -682,9 +763,9 @@
                 vesting: vesting,
                 signing: signing,
                 annualBonus: annualBonus,
-                christmasBonus: christmasBonus,
+                aguinaldo: aguinaldo,
                 ptoDays: ptoDays,
-                ptoBonus: ptoBonus,
+                primaVacacional: primaVacacional,
                 medical: medical,
                 benefits: benefits,
                 relocation: relocation,
@@ -727,9 +808,9 @@
                 { label: 'Vesting Period (Years)', key: 'vesting', isNumber: true },
                 { label: 'Signing Bonus', key: 'signing' },
                 { label: 'Annual Bonus', key: 'annualBonus' },
-                { label: 'Christmas Bonus', key: 'christmasBonus' },
+                { label: 'Aguinaldo', key: 'aguinaldo' },
                 { label: 'PTO Days per Year', key: 'ptoDays', isNumber: true },
-                { label: 'PTO Bonus (Annual)', key: 'ptoBonus' },
+                { label: 'Prima Vacacional', key: 'primaVacacional' },
                 { label: 'Medical Benefits (Annual)', key: 'medical' },
                 { label: 'Other Benefits (Annual)', key: 'benefits' },
                 { label: 'Relocation Bonus', key: 'relocation' },
@@ -803,14 +884,14 @@
                     monthTotal += offer.annualBonus;
                 }
 
-                // Add Christmas bonus at month 12, 24, 36, etc.
+                // Add aguinaldo at month 12, 24, 36, etc.
                 if (month % 12 === 0) {
-                    monthTotal += offer.christmasBonus;
+                    monthTotal += offer.aguinaldo;
                 }
 
-                // Add PTO bonus at month 12, 24, 36, etc.
+                // Add prima vacacional at month 12, 24, 36, etc.
                 if (month % 12 === 0) {
-                    monthTotal += offer.ptoBonus;
+                    monthTotal += offer.primaVacacional;
                 }
 
                 // Add stock vesting if within vesting period
@@ -1124,19 +1205,19 @@
                     }
                     events.push(`Months ${bonusMonths.join(', ')}: Annual bonus of ${formatCurrency(offer.annualBonus)}`);
                 }
-                if (offer.christmasBonus > 0) {
+                if (offer.aguinaldo > 0) {
                     const bonusMonths = [];
                     for (let m = 12; m <= months; m += 12) {
                         bonusMonths.push(m);
                     }
-                    events.push(`Months ${bonusMonths.join(', ')}: Christmas bonus of ${formatCurrency(offer.christmasBonus)}`);
+                    events.push(`Months ${bonusMonths.join(', ')}: Aguinaldo of ${formatCurrency(offer.aguinaldo)}`);
                 }
-                if (offer.ptoBonus > 0) {
+                if (offer.primaVacacional > 0) {
                     const bonusMonths = [];
                     for (let m = 12; m <= months; m += 12) {
                         bonusMonths.push(m);
                     }
-                    events.push(`Months ${bonusMonths.join(', ')}: PTO bonus of ${formatCurrency(offer.ptoBonus)}`);
+                    events.push(`Months ${bonusMonths.join(', ')}: Prima Vacacional of ${formatCurrency(offer.primaVacacional)}`);
                 }
                 if (offer.stocks > 0) {
                     const vestingEnd = Math.min(offer.vesting * 12, months);
