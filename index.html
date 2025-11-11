@@ -428,11 +428,7 @@
         <div id="comparisonSection" class="comparison-section" style="display: none;">
             <h2>📊 Comparison Summary</h2>
             <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th id="offerHeaders"></th>
-                    </tr>
+                <thead id="comparisonHeader">
                 </thead>
                 <tbody id="comparisonBody">
                 </tbody>
@@ -487,7 +483,8 @@
                 <li><strong>Annual vs Monthly:</strong> Choose whether your salary is annual or monthly</li>
                 <li><strong>Stock Value:</strong> Enter the total value of stock grants (RSUs, options, etc.)</li>
                 <li><strong>Vesting Period:</strong> Specify how many years your stocks vest over</li>
-                <li><strong>Bonuses:</strong> Include signing bonuses and annual performance bonuses</li>
+                <li><strong>Bonuses:</strong> Include signing bonuses, annual performance bonuses, Christmas bonus (prima vacacional), and PTO bonus</li>
+                <li><strong>PTO Days:</strong> Enter the number of paid time off days per year</li>
                 <li><strong>Medical Benefits:</strong> Enter the annual value of health, dental, and vision insurance</li>
                 <li><strong>Other Benefits:</strong> Add monetary value of other benefits (401k match, gym, commuter, etc.)</li>
                 <li><strong>Compare:</strong> The comparison table shows all offers side-by-side with the best values highlighted</li>
@@ -568,6 +565,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="${offerId}-christmas-bonus">Christmas Bonus (Prima Vacacional)</label>
+                    <input type="number" id="${offerId}-christmas-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Annual Christmas/holiday bonus</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-pto-days">PTO Days per Year</label>
+                    <input type="number" id="${offerId}-pto-days" placeholder="0" min="0" step="0.5" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Paid time off days annually</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-pto-bonus">PTO Bonus (Annual)</label>
+                    <input type="number" id="${offerId}-pto-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Annual vacation bonus or PTO cash-out</div>
+                </div>
+
+                <div class="form-group">
                     <label for="${offerId}-medical">Medical Benefits (Annual)</label>
                     <input type="number" id="${offerId}-medical" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
                     <div class="help-text">Health, dental, vision insurance value</div>
@@ -608,6 +623,9 @@
                 vesting: 4,
                 signing: 0,
                 annualBonus: 0,
+                christmasBonus: 0,
+                ptoDays: 0,
+                ptoBonus: 0,
                 medical: 0,
                 benefits: 0,
                 relocation: 0,
@@ -636,6 +654,9 @@
             const vesting = parseFloat(document.getElementById(`${offerId}-vesting`).value) || 4;
             const signing = parseFloat(document.getElementById(`${offerId}-signing`).value) || 0;
             const annualBonus = parseFloat(document.getElementById(`${offerId}-annual-bonus`).value) || 0;
+            const christmasBonus = parseFloat(document.getElementById(`${offerId}-christmas-bonus`).value) || 0;
+            const ptoDays = parseFloat(document.getElementById(`${offerId}-pto-days`).value) || 0;
+            const ptoBonus = parseFloat(document.getElementById(`${offerId}-pto-bonus`).value) || 0;
             const medical = parseFloat(document.getElementById(`${offerId}-medical`).value) || 0;
             const benefits = parseFloat(document.getElementById(`${offerId}-benefits`).value) || 0;
             const relocation = parseFloat(document.getElementById(`${offerId}-relocation`).value) || 0;
@@ -647,10 +668,10 @@
             const annualStockValue = vesting > 0 ? stocks / vesting : 0;
 
             // Calculate first year total compensation
-            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + medical + benefits + relocation;
+            const firstYearTotal = annualSalary + annualStockValue + signing + annualBonus + christmasBonus + ptoBonus + medical + benefits + relocation;
 
             // Calculate ongoing annual compensation (after first year, no one-time bonuses)
-            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + medical + benefits;
+            const ongoingAnnual = annualSalary + annualStockValue + annualBonus + christmasBonus + ptoBonus + medical + benefits;
 
             offers[offerId] = {
                 company: company || `Offer ${offerId.split('-')[1]}`,
@@ -661,6 +682,9 @@
                 vesting: vesting,
                 signing: signing,
                 annualBonus: annualBonus,
+                christmasBonus: christmasBonus,
+                ptoDays: ptoDays,
+                ptoBonus: ptoBonus,
                 medical: medical,
                 benefits: benefits,
                 relocation: relocation,
@@ -684,12 +708,16 @@
 
             document.getElementById('comparisonSection').style.display = 'block';
 
-            // Create headers
-            const headers = offerKeys.map(key => {
+            // Create headers - FIXED: Create proper table row with multiple header cells
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = '<th>Component</th>' + offerKeys.map(key => {
                 const offer = offers[key];
                 return `<th>${offer.company}<br><small>${offer.position}</small></th>`;
             }).join('');
-            document.getElementById('offerHeaders').innerHTML = headers;
+            
+            const comparisonHeader = document.getElementById('comparisonHeader');
+            comparisonHeader.innerHTML = '';
+            comparisonHeader.appendChild(headerRow);
 
             // Create comparison rows
             const rows = [
@@ -699,6 +727,9 @@
                 { label: 'Vesting Period (Years)', key: 'vesting', isNumber: true },
                 { label: 'Signing Bonus', key: 'signing' },
                 { label: 'Annual Bonus', key: 'annualBonus' },
+                { label: 'Christmas Bonus', key: 'christmasBonus' },
+                { label: 'PTO Days per Year', key: 'ptoDays', isNumber: true },
+                { label: 'PTO Bonus (Annual)', key: 'ptoBonus' },
                 { label: 'Medical Benefits (Annual)', key: 'medical' },
                 { label: 'Other Benefits (Annual)', key: 'benefits' },
                 { label: 'Relocation Bonus', key: 'relocation' },
@@ -770,6 +801,16 @@
                 // Add annual bonus at month 12, 24, 36, etc.
                 if (month % 12 === 0) {
                     monthTotal += offer.annualBonus;
+                }
+
+                // Add Christmas bonus at month 12, 24, 36, etc.
+                if (month % 12 === 0) {
+                    monthTotal += offer.christmasBonus;
+                }
+
+                // Add PTO bonus at month 12, 24, 36, etc.
+                if (month % 12 === 0) {
+                    monthTotal += offer.ptoBonus;
                 }
 
                 // Add stock vesting if within vesting period
@@ -1082,6 +1123,20 @@
                         bonusMonths.push(m);
                     }
                     events.push(`Months ${bonusMonths.join(', ')}: Annual bonus of ${formatCurrency(offer.annualBonus)}`);
+                }
+                if (offer.christmasBonus > 0) {
+                    const bonusMonths = [];
+                    for (let m = 12; m <= months; m += 12) {
+                        bonusMonths.push(m);
+                    }
+                    events.push(`Months ${bonusMonths.join(', ')}: Christmas bonus of ${formatCurrency(offer.christmasBonus)}`);
+                }
+                if (offer.ptoBonus > 0) {
+                    const bonusMonths = [];
+                    for (let m = 12; m <= months; m += 12) {
+                        bonusMonths.push(m);
+                    }
+                    events.push(`Months ${bonusMonths.join(', ')}: PTO bonus of ${formatCurrency(offer.ptoBonus)}`);
                 }
                 if (offer.stocks > 0) {
                     const vestingEnd = Math.min(offer.vesting * 12, months);
