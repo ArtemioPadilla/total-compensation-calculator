@@ -692,8 +692,12 @@
                     <label>Insurance Coverage</label>
                     <div style="margin-top: 8px;">
                         <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-health" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Health Insurance</span>
+                            <input type="checkbox" id="${offerId}-insurance-health-major" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Major Health Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-health-minor" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Minor Health Insurance</span>
                         </label>
                         <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
                             <input type="checkbox" id="${offerId}-insurance-dental" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
@@ -713,6 +717,12 @@
                         </label>
                     </div>
                     <div class="help-text">Types of insurance coverage provided</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-insurance-covered-sum">Insurance Covered Sum</label>
+                    <input type="number" id="${offerId}-insurance-covered-sum" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Total insurance coverage amount</div>
                 </div>
 
                 <div class="form-group">
@@ -800,12 +810,14 @@
                 travel: 0,
                 leadership: '',
                 insurance: {
-                    health: false,
+                    healthMajor: false,
+                    healthMinor: false,
                     dental: false,
                     vision: false,
                     life: false,
                     disability: false
                 },
+                insuranceCoveredSum: 0,
                 perks: {
                     gym: false,
                     car: false,
@@ -1132,12 +1144,15 @@
             const leadership = document.getElementById(`${offerId}-leadership`).value;
             
             const insurance = {
-                health: document.getElementById(`${offerId}-insurance-health`).checked,
+                healthMajor: document.getElementById(`${offerId}-insurance-health-major`).checked,
+                healthMinor: document.getElementById(`${offerId}-insurance-health-minor`).checked,
                 dental: document.getElementById(`${offerId}-insurance-dental`).checked,
                 vision: document.getElementById(`${offerId}-insurance-vision`).checked,
                 life: document.getElementById(`${offerId}-insurance-life`).checked,
                 disability: document.getElementById(`${offerId}-insurance-disability`).checked
             };
+            
+            const insuranceCoveredSum = parseFloat(document.getElementById(`${offerId}-insurance-covered-sum`).value) || 0;
             
             const perks = {
                 gym: document.getElementById(`${offerId}-perk-gym`).checked,
@@ -1172,6 +1187,7 @@
                 travel: travel,
                 leadership: leadership,
                 insurance: insurance,
+                insuranceCoveredSum: insuranceCoveredSum,
                 perks: perks
             };
 
@@ -1236,6 +1252,7 @@
                     return roles[v] || v || '-';
                 }},
                 { label: 'Insurance Coverage', key: 'insurance', isObject: true },
+                { label: 'Insurance Covered Sum', key: 'insuranceCoveredSum' },
                 { label: 'Company Perks', key: 'perks', isObject: true }
             ];
 
@@ -1278,7 +1295,10 @@
                             const checkedItems = Object.entries(value)
                                 .filter(([k, v]) => v)
                                 .map(([k, v]) => {
-                                    // Capitalize first letter
+                                    // Special formatting for health insurance types
+                                    if (k === 'healthMajor') return 'Major Health';
+                                    if (k === 'healthMinor') return 'Minor Health';
+                                    // Capitalize first letter for others
                                     return k.charAt(0).toUpperCase() + k.slice(1);
                                 });
                             displayValue = checkedItems.length > 0 ? checkedItems.join(', ') : 'None';
@@ -1289,6 +1309,9 @@
                         displayValue = value || '-';
                     } else if (row.isNumber) {
                         displayValue = value || '-';
+                    } else {
+                        // Default formatting for monetary values
+                        displayValue = value ? formatCurrency(value) : '-';
                     }
                     
                     tableHTML += `<td>${displayValue}</td>`;
