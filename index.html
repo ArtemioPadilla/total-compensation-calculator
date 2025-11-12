@@ -1,9 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total Compensation Calculator - Compare Job Offers</title>
+    <style>
+        :root {
+            /* Light theme colors */
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.2);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-inverse: #ffffff;
+            --border-color: #e0e0e0;
+            --input-bg: #ffffff;
+            --input-border: #e0e0e0;
+            --input-focus: #667eea;
+            --button-primary: #667eea;
+            --button-primary-hover: #5568d3;
+            --button-secondary: #e0e0e0;
+            --button-secondary-text: #333;
+            --button-remove: #f44336;
+            --table-header-bg: #f5f5f5;
+            --table-hover: #f9f9f9;
+            --highlight-bg: #e8f5e9;
+            --badge-bg: #4caf50;
+            --section-separator: #f0f0f0;
+            --help-text: #666666;
+            --collapsible-border: #ddd;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme colors */
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --card-bg: #2d2d3f;
+            --card-shadow: rgba(0, 0, 0, 0.5);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-inverse: #ffffff;
+            --border-color: #404050;
+            --input-bg: #1f1f2e;
+            --input-border: #404050;
+            --input-focus: #7b8cde;
+            --button-primary: #7b8cde;
+            --button-primary-hover: #6b7bce;
+            --button-secondary: #404050;
+            --button-secondary-text: #e0e0e0;
+            --button-remove: #e57373;
+            --table-header-bg: #1f1f2e;
+            --table-hover: #353545;
+            --highlight-bg: #2d4a2d;
+            --badge-bg: #66bb6a;
+            --section-separator: #404050;
+            --help-text: #b0b0b0;
+            --collapsible-border: #404050;
+        }
+        
     <style>
         * {
             margin: 0;
@@ -13,9 +68,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.3s ease;
         }
 
         .container {
@@ -25,8 +81,9 @@
 
         header {
             text-align: center;
-            color: white;
+            color: var(--text-inverse);
             margin-bottom: 30px;
+            position: relative;
         }
 
         header h1 {
@@ -39,6 +96,38 @@
             opacity: 0.9;
         }
 
+        .header-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .toggle-button:active {
+            transform: translateY(0);
+        }
+
         .offers-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -47,18 +136,73 @@
         }
 
         .offer-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px var(--card-shadow);
+            transition: all 0.3s ease;
         }
 
         .offer-card h2 {
-            color: #667eea;
+            color: var(--button-primary);
             margin-bottom: 20px;
             font-size: 1.5em;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid var(--button-primary);
             padding-bottom: 10px;
+        }
+
+        /* Collapsible sections */
+        .section-collapsible {
+            border: 1px solid var(--collapsible-border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section-header {
+            background: var(--table-header-bg);
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: var(--table-hover);
+        }
+
+        .section-header h3 {
+            color: var(--text-primary);
+            font-size: 1.1em;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 15px;
+        }
+
+        .section-content.expanded {
+            max-height: 3000px;
+            padding: 15px;
         }
 
         .form-group {
@@ -68,24 +212,39 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #333;
+            color: var(--text-primary);
             font-weight: 500;
+        }
+
+        .form-group label .required {
+            color: var(--button-remove);
+            font-weight: bold;
+            margin-left: 3px;
+        }
+
+        .form-group label .optional {
+            color: var(--text-secondary);
+            font-weight: normal;
+            font-size: 0.85em;
+            margin-left: 5px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 10px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--input-border);
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.3s;
+            background: var(--input-bg);
+            color: var(--text-primary);
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--input-focus);
         }
 
         .form-group input[type="number"] {
@@ -93,8 +252,8 @@
         }
 
         .total-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--button-primary) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-inverse);
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
@@ -129,44 +288,44 @@
         }
 
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: var(--button-primary);
+            color: var(--text-inverse);
         }
 
         .btn-primary:hover {
-            background: #5568d3;
+            background: var(--button-primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: var(--button-secondary);
+            color: var(--button-secondary-text);
         }
 
         .btn-secondary:hover {
-            background: #d0d0d0;
+            opacity: 0.8;
         }
 
         .btn-remove {
-            background: #f44336;
-            color: white;
+            background: var(--button-remove);
+            color: var(--text-inverse);
         }
 
         .btn-remove:hover {
-            background: #da190b;
+            opacity: 0.9;
         }
 
         .comparison-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px var(--card-shadow);
             margin-top: 30px;
         }
 
         .comparison-section h2 {
-            color: #667eea;
+            color: var(--button-primary);
             margin-bottom: 20px;
             text-align: center;
             font-size: 2em;
@@ -182,7 +341,8 @@
         .comparison-table td {
             padding: 12px;
             text-align: right;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
         }
 
         .comparison-table th:first-child,
@@ -192,23 +352,23 @@
         }
 
         .comparison-table th {
-            background: #f5f5f5;
-            color: #667eea;
+            background: var(--table-header-bg);
+            color: var(--button-primary);
             font-weight: 600;
         }
 
         .comparison-table tr:hover {
-            background: #f9f9f9;
+            background: var(--table-hover);
         }
 
         .best-offer {
-            background: #e8f5e9 !important;
+            background: var(--highlight-bg) !important;
         }
 
         .winner-badge {
             display: inline-block;
-            background: #4caf50;
-            color: white;
+            background: var(--badge-bg);
+            color: var(--text-inverse);
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -224,7 +384,7 @@
 
         .help-text {
             font-size: 12px;
-            color: #666;
+            color: var(--help-text);
             margin-top: 3px;
         }
 
@@ -248,15 +408,15 @@
         }
 
         .info-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px var(--card-shadow);
             margin-top: 30px;
         }
 
         .info-section h3 {
-            color: #667eea;
+            color: var(--button-primary);
             margin-bottom: 15px;
         }
 
@@ -266,19 +426,19 @@
         }
 
         .info-section li {
-            color: #555;
+            color: var(--text-secondary);
         }
 
         .chart-section {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px var(--card-shadow);
             margin-top: 30px;
         }
 
         .chart-section h2 {
-            color: #667eea;
+            color: var(--button-primary);
             margin-bottom: 20px;
             text-align: center;
             font-size: 2em;
@@ -294,28 +454,30 @@
         }
 
         .chart-controls label {
-            color: #333;
+            color: var(--text-primary);
             font-weight: 500;
         }
 
         .chart-controls select {
             padding: 8px 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--input-border);
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.3s;
+            background: var(--input-bg);
+            color: var(--text-primary);
         }
 
         .chart-controls select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--input-focus);
         }
 
         .chart-container {
             position: relative;
             height: 500px;
             margin-top: 20px;
-            background: #f9f9f9;
+            background: var(--table-header-bg);
             border-radius: 8px;
             padding: 20px;
             overflow-x: auto;
@@ -362,7 +524,7 @@
 
         .chart-label {
             font-size: 11px;
-            fill: #666;
+            fill: var(--text-secondary);
         }
 
         .chart-tooltip {
@@ -386,7 +548,7 @@
         }
 
         .chart-legend h4 {
-            color: #667eea;
+            color: var(--button-primary);
             margin-bottom: 10px;
         }
 
@@ -399,7 +561,7 @@
 
         .chart-legend li {
             padding: 5px 0;
-            color: #555;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -415,8 +577,18 @@
 <body>
     <div class="container">
         <header>
-            <h1>💼 Total Compensation Calculator</h1>
-            <p>Compare job offers with all compensation dimensions</p>
+            <h1 id="header-title">💼 Total Compensation Calculator</h1>
+            <p id="header-subtitle">Compare job offers with all compensation dimensions</p>
+            <div class="header-controls">
+                <button class="toggle-button" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Dark Mode</span>
+                </button>
+                <button class="toggle-button" onclick="toggleLanguage()">
+                    <span id="lang-icon">🌐</span>
+                    <span id="lang-text">Español</span>
+                </button>
+            </div>
         </header>
 
         <div id="offersContainer" class="offers-container">
@@ -495,6 +667,237 @@
     </div>
 
     <script>
+        // Theme and Language Management
+        let currentLang = 'en';
+        let currentTheme = 'light';
+
+        const translations = {
+            en: {
+                headerTitle: '💼 Total Compensation Calculator',
+                headerSubtitle: 'Compare job offers with all compensation dimensions',
+                darkMode: 'Dark Mode',
+                lightMode: 'Light Mode',
+                español: 'Español',
+                english: 'English',
+                addOffer: '+ Add Job Offer',
+                jobOffer: 'Job Offer',
+                companyName: 'Company Name',
+                companyPlaceholder: 'e.g., TechCorp Inc.',
+                position: 'Position',
+                positionPlaceholder: 'e.g., Senior Software Engineer',
+                baseSalary: 'Base Salary',
+                baseSalaryHelp: 'Your base annual or monthly salary',
+                required: '*',
+                optional: '(optional)',
+                salaryPeriod: 'Salary Period',
+                annual: 'Annual',
+                monthly: 'Monthly',
+                stockValue: 'Stock Value (Total)',
+                stockValueHelp: 'Total value of RSUs, stock options, or equity grants',
+                vestingPeriod: 'Vesting Period (Years)',
+                vestingPeriodHelp: 'How many years stocks vest over',
+                vestingScheduleType: 'Vesting Schedule Type',
+                linear: 'Linear (Equal annually)',
+                customSchedule: 'Custom Schedule',
+                signingBonus: 'Signing Bonus',
+                signingBonusHelp: 'One-time signing bonus',
+                annualBonus: 'Annual Bonus',
+                annualBonusHelp: 'Expected yearly performance bonus',
+                aguinaldo: 'Aguinaldo (Christmas Bonus)',
+                aguinaldoHelp: 'Annual Christmas bonus (aguinaldo)',
+                ptoDays: 'PTO Days per Year',
+                ptoDaysHelp: 'Paid time off days annually',
+                primaCalc: 'Prima Vacacional Calculation',
+                directAmount: 'Direct Amount',
+                calculateFromDays: 'Calculate from Days & Percentage',
+                primaVacacional: 'Prima Vacacional (Total)',
+                primaVacacionalHelp: 'Annual vacation bonus (prima vacacional)',
+                medicalBenefits: 'Medical Benefits (Annual)',
+                medicalBenefitsHelp: 'Health, dental, vision insurance value',
+                otherBenefits: 'Other Benefits (Annual)',
+                otherBenefitsHelp: '401k match, gym, commuter benefits, etc.',
+                relocationBonus: 'Relocation Bonus',
+                relocationBonusHelp: 'One-time relocation assistance',
+                nonMonetary: 'Non-Monetary Benefits & Aspects',
+                workMode: 'Work Mode',
+                workModeHelp: 'Remote, hybrid, or on-site work arrangement',
+                calculate: 'Calculate',
+                remove: 'Remove',
+                firstYearTotal: 'First Year Total',
+                comparisonSummary: '📊 Comparison Summary',
+                compensationOverTime: '📈 Compensation Over Time',
+                howToUse: 'How to Use',
+                basicInfo: 'Basic Information',
+                compensation: 'Compensation Details',
+                benefits: 'Benefits & Bonuses',
+                qualitative: 'Qualitative Factors',
+                customDimensions: 'Custom Evaluation Dimensions'
+            },
+            es: {
+                headerTitle: '💼 Calculadora de Compensación Total',
+                headerSubtitle: 'Compara ofertas de trabajo con todas las dimensiones de compensación',
+                darkMode: 'Modo Oscuro',
+                lightMode: 'Modo Claro',
+                español: 'Español',
+                english: 'Inglés',
+                addOffer: '+ Agregar Oferta de Trabajo',
+                jobOffer: 'Oferta de Trabajo',
+                companyName: 'Nombre de la Empresa',
+                companyPlaceholder: 'ej., TechCorp Inc.',
+                position: 'Posición',
+                positionPlaceholder: 'ej., Ingeniero de Software Senior',
+                baseSalary: 'Salario Base',
+                baseSalaryHelp: 'Tu salario base anual o mensual',
+                required: '*',
+                optional: '(opcional)',
+                salaryPeriod: 'Período de Salario',
+                annual: 'Anual',
+                monthly: 'Mensual',
+                stockValue: 'Valor de Acciones (Total)',
+                stockValueHelp: 'Valor total de RSUs, opciones sobre acciones, etc.',
+                vestingPeriod: 'Período de Consolidación (Años)',
+                vestingPeriodHelp: 'Cuántos años se consolidan las acciones',
+                vestingScheduleType: 'Tipo de Calendario de Consolidación',
+                linear: 'Lineal (Igual anualmente)',
+                customSchedule: 'Calendario Personalizado',
+                signingBonus: 'Bono de Firma',
+                signingBonusHelp: 'Bono único de firma',
+                annualBonus: 'Bono Anual',
+                annualBonusHelp: 'Bono anual de rendimiento esperado',
+                aguinaldo: 'Aguinaldo',
+                aguinaldoHelp: 'Aguinaldo anual',
+                ptoDays: 'Días de Vacaciones al Año',
+                ptoDaysHelp: 'Días de descanso pagados anualmente',
+                primaCalc: 'Cálculo de Prima Vacacional',
+                directAmount: 'Cantidad Directa',
+                calculateFromDays: 'Calcular desde Días y Porcentaje',
+                primaVacacional: 'Prima Vacacional (Total)',
+                primaVacacionalHelp: 'Bono vacacional anual (prima vacacional)',
+                medicalBenefits: 'Beneficios Médicos (Anuales)',
+                medicalBenefitsHelp: 'Valor del seguro médico, dental, de visión',
+                otherBenefits: 'Otros Beneficios (Anuales)',
+                otherBenefitsHelp: 'Contribución 401k, gimnasio, transporte, etc.',
+                relocationBonus: 'Bono de Reubicación',
+                relocationBonusHelp: 'Asistencia única de reubicación',
+                nonMonetary: 'Beneficios No Monetarios y Aspectos',
+                workMode: 'Modo de Trabajo',
+                workModeHelp: 'Remoto, híbrido o presencial',
+                calculate: 'Calcular',
+                remove: 'Eliminar',
+                firstYearTotal: 'Total Primer Año',
+                comparisonSummary: '📊 Resumen de Comparación',
+                compensationOverTime: '📈 Compensación a lo Largo del Tiempo',
+                howToUse: 'Cómo Usar',
+                basicInfo: 'Información Básica',
+                compensation: 'Detalles de Compensación',
+                benefits: 'Beneficios y Bonos',
+                qualitative: 'Factores Cualitativos',
+                customDimensions: 'Dimensiones de Evaluación Personalizadas'
+            }
+        };
+
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', currentTheme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (currentTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = t('lightMode');
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = t('darkMode');
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            document.documentElement.setAttribute('lang', currentLang === 'en' ? 'en' : 'es');
+            localStorage.setItem('language', currentLang);
+            updateTranslations();
+        }
+
+        function updateTranslations() {
+            document.getElementById('header-title').textContent = t('headerTitle');
+            document.getElementById('header-subtitle').textContent = t('headerSubtitle');
+            document.getElementById('theme-text').textContent = currentTheme === 'dark' ? t('lightMode') : t('darkMode');
+            document.getElementById('lang-text').textContent = currentLang === 'en' ? t('español') : t('english');
+            
+            // Update add offer button
+            const addOfferBtn = document.querySelector('.add-offer-btn');
+            if (addOfferBtn) {
+                addOfferBtn.textContent = t('addOffer');
+            }
+            
+            // Update comparison section title
+            const comparisonTitle = document.querySelector('#comparisonSection h2');
+            if (comparisonTitle) {
+                comparisonTitle.textContent = t('comparisonSummary');
+            }
+            
+            // Update chart section title
+            const chartTitle = document.querySelector('#chartSection h2');
+            if (chartTitle) {
+                chartTitle.textContent = t('compensationOverTime');
+            }
+            
+            // Update info section title
+            const infoTitle = document.querySelector('.info-section h3');
+            if (infoTitle) {
+                infoTitle.textContent = t('howToUse');
+            }
+            
+            // Update all offer cards
+            Object.keys(offers).forEach(offerId => {
+                updateOfferCardTranslations(offerId);
+            });
+        }
+
+        function updateOfferCardTranslations(offerId) {
+            // This will be called when offer cards are created
+            // For now, we'll update labels dynamically when cards exist
+        }
+
+        // Initialize theme and language from localStorage
+        function initializePreferences() {
+            const savedTheme = localStorage.getItem('theme');
+            const savedLang = localStorage.getItem('language');
+            
+            // Detect system preference
+            if (!savedTheme) {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                currentTheme = prefersDark ? 'dark' : 'light';
+            } else {
+                currentTheme = savedTheme;
+            }
+            
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            if (savedLang) {
+                currentLang = savedLang;
+                document.documentElement.setAttribute('lang', currentLang === 'en' ? 'en' : 'es');
+            }
+            
+            // Update UI to reflect current theme
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            if (currentTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = t('lightMode');
+            }
+            
+            updateTranslations();
+        }
+
         let offerCount = 0;
         let offers = {};
 
@@ -507,6 +910,17 @@
             }).format(amount);
         }
 
+        // Collapsible section toggle
+        function toggleSection(sectionId) {
+            const header = document.getElementById(`${sectionId}-header`);
+            const content = document.getElementById(`${sectionId}-content`);
+            
+            if (header && content) {
+                header.classList.toggle('expanded');
+                content.classList.toggle('expanded');
+            }
+        }
+
         function addOffer() {
             offerCount++;
             const offerId = `offer-${offerCount}`;
@@ -515,269 +929,315 @@
             offerCard.className = 'offer-card';
             offerCard.id = offerId;
             offerCard.innerHTML = `
-                <h2>Job Offer ${offerCount}</h2>
+                <h2>${t('jobOffer')} ${offerCount}</h2>
                 
-                <div class="form-group">
-                    <label for="${offerId}-company">Company Name</label>
-                    <input type="text" id="${offerId}-company" placeholder="e.g., TechCorp Inc." onchange="updateOffer('${offerId}')">
-                </div>
+                <!-- Basic Information Section - Always Expanded -->
+                <div class="section-collapsible">
+                    <div class="section-header expanded" id="${offerId}-basic-header" onclick="toggleSection('${offerId}-basic')">
+                        <h3>📋 ${t('basicInfo')}</h3>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="section-content expanded" id="${offerId}-basic-content">
+                        <div class="form-group">
+                            <label for="${offerId}-company">${t('companyName')} <span class="optional">${t('optional')}</span></label>
+                            <input type="text" id="${offerId}-company" placeholder="${t('companyPlaceholder')}" onchange="updateOffer('${offerId}')">
+                        </div>
 
-                <div class="form-group">
-                    <label for="${offerId}-position">Position</label>
-                    <input type="text" id="${offerId}-position" placeholder="e.g., Senior Software Engineer" onchange="updateOffer('${offerId}')">
-                </div>
+                        <div class="form-group">
+                            <label for="${offerId}-position">${t('position')} <span class="optional">${t('optional')}</span></label>
+                            <input type="text" id="${offerId}-position" placeholder="${t('positionPlaceholder')}" onchange="updateOffer('${offerId}')">
+                        </div>
 
-                <div class="form-group">
-                    <label for="${offerId}-salary">Base Salary</label>
-                    <input type="number" id="${offerId}-salary" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Your base annual or monthly salary</div>
-                </div>
+                        <div class="form-group">
+                            <label for="${offerId}-salary">${t('baseSalary')} <span class="required">${t('required')}</span></label>
+                            <input type="number" id="${offerId}-salary" placeholder="0" min="0" onchange="updateOffer('${offerId}')" required>
+                            <div class="help-text">${t('baseSalaryHelp')}</div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="${offerId}-period">Salary Period</label>
-                    <select id="${offerId}-period" onchange="updateOffer('${offerId}')">
-                        <option value="annual">Annual</option>
-                        <option value="monthly">Monthly</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-stocks">Stock Value (Total)</label>
-                    <input type="number" id="${offerId}-stocks" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Total value of RSUs, stock options, or equity grants</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-vesting">Vesting Period (Years)</label>
-                    <input type="number" id="${offerId}-vesting" placeholder="4" min="0" step="0.5" value="4" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">How many years stocks vest over</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-vesting-type">Vesting Schedule Type</label>
-                    <select id="${offerId}-vesting-type" onchange="toggleVestingSchedule('${offerId}')">
-                        <option value="linear">Linear (Equal annually)</option>
-                        <option value="custom">Custom Schedule</option>
-                    </select>
-                </div>
-
-                <div id="${offerId}-custom-vesting" style="display: none;">
-                    <div class="form-group">
-                        <label>Custom Vesting Schedule</label>
-                        <div id="${offerId}-vesting-milestones"></div>
-                        <button type="button" class="btn-secondary" onclick="addVestingMilestone('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Milestone</button>
-                        <div class="help-text">Define percentage vesting at specific time points</div>
+                        <div class="form-group">
+                            <label for="${offerId}-period">${t('salaryPeriod')}</label>
+                            <select id="${offerId}-period" onchange="updateOffer('${offerId}')">
+                                <option value="annual">${t('annual')}</option>
+                                <option value="monthly">${t('monthly')}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="${offerId}-signing">Signing Bonus</label>
-                    <input type="number" id="${offerId}-signing" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">One-time signing bonus</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-annual-bonus">Annual Bonus</label>
-                    <input type="number" id="${offerId}-annual-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Expected yearly performance bonus</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-aguinaldo">Aguinaldo (Christmas Bonus)</label>
-                    <input type="number" id="${offerId}-aguinaldo" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Annual Christmas bonus (aguinaldo)</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-pto-days">PTO Days per Year</label>
-                    <input type="number" id="${offerId}-pto-days" placeholder="0" min="0" step="0.5" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Paid time off days annually</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-prima-calc-method">Prima Vacacional Calculation</label>
-                    <select id="${offerId}-prima-calc-method" onchange="togglePrimaVacacionalMethod('${offerId}')">
-                        <option value="direct">Direct Amount</option>
-                        <option value="calculated">Calculate from Days & Percentage</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="${offerId}-prima-direct" style="display: block;">
-                    <label for="${offerId}-prima-vacacional">Prima Vacacional (Total)</label>
-                    <input type="number" id="${offerId}-prima-vacacional" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Annual vacation bonus (prima vacacional)</div>
-                </div>
-
-                <div id="${offerId}-prima-calculated" style="display: none;">
-                    <div class="form-group">
-                        <label for="${offerId}-prima-days">Vacation Days for Prima</label>
-                        <input type="number" id="${offerId}-prima-days" placeholder="0" min="0" step="0.5" onchange="calculatePrimaVacacional('${offerId}')">
-                        <div class="help-text">Number of vacation days used for calculation</div>
+                <!-- Compensation Details Section - Collapsed by default -->
+                <div class="section-collapsible">
+                    <div class="section-header" id="${offerId}-comp-header" onclick="toggleSection('${offerId}-comp')">
+                        <h3>💰 ${t('compensation')}</h3>
+                        <span class="toggle-icon">▼</span>
                     </div>
+                    <div class="section-content" id="${offerId}-comp-content">
 
-                    <div class="form-group">
-                        <label for="${offerId}-prima-percentage">Prima Percentage (%)</label>
-                        <input type="number" id="${offerId}-prima-percentage" placeholder="25" min="0" max="100" step="0.1" onchange="calculatePrimaVacacional('${offerId}')">
-                        <div class="help-text">Percentage of daily salary (e.g., 25%)</div>
-                    </div>
+                        <div class="form-group">
+                            <label for="${offerId}-stocks">${t('stockValue')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-stocks" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('stockValueHelp')}</div>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Calculated Prima Vacacional</label>
-                        <div id="${offerId}-prima-calculated-value" style="font-weight: bold; color: #667eea; padding: 10px; background: #f5f5f5; border-radius: 6px;">$0</div>
+                        <div class="form-group">
+                            <label for="${offerId}-vesting">${t('vestingPeriod')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-vesting" placeholder="4" min="0" step="0.5" value="4" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('vestingPeriodHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-vesting-type">${t('vestingScheduleType')} <span class="optional">${t('optional')}</span></label>
+                            <select id="${offerId}-vesting-type" onchange="toggleVestingSchedule('${offerId}')">
+                                <option value="linear">${t('linear')}</option>
+                                <option value="custom">${t('customSchedule')}</option>
+                            </select>
+                        </div>
+
+                        <div id="${offerId}-custom-vesting" style="display: none;">
+                            <div class="form-group">
+                                <label>Custom Vesting Schedule</label>
+                                <div id="${offerId}-vesting-milestones"></div>
+                                <button type="button" class="btn-secondary" onclick="addVestingMilestone('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Milestone</button>
+                                <div class="help-text">Define percentage vesting at specific time points</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-signing">${t('signingBonus')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-signing" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('signingBonusHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-annual-bonus">${t('annualBonus')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-annual-bonus" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('annualBonusHelp')}</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="${offerId}-medical">Medical Benefits (Annual)</label>
-                    <input type="number" id="${offerId}-medical" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Health, dental, vision insurance value</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-benefits">Other Benefits (Annual)</label>
-                    <input type="number" id="${offerId}-benefits" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">401k match, gym, commuter benefits, etc.</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-relocation">Relocation Bonus</label>
-                    <input type="number" id="${offerId}-relocation" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">One-time relocation assistance</div>
-                </div>
-
-                <h2 style="margin-top: 25px; border-top: 2px solid #e0e0e0; padding-top: 20px;">Non-Monetary Benefits & Aspects</h2>
-
-                <div class="form-group">
-                    <label for="${offerId}-work-mode">Work Mode</label>
-                    <select id="${offerId}-work-mode" onchange="updateOffer('${offerId}')">
-                        <option value="">Select...</option>
-                        <option value="remote">Fully Remote</option>
-                        <option value="hybrid">Hybrid</option>
-                        <option value="onsite">On-Site</option>
-                    </select>
-                    <div class="help-text">Remote, hybrid, or on-site work arrangement</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-flexibility">Work Flexibility Rating</label>
-                    <select id="${offerId}-flexibility" onchange="updateOffer('${offerId}')">
-                        <option value="">Select...</option>
-                        <option value="5">5 - Excellent (Very flexible schedule)</option>
-                        <option value="4">4 - Good (Flexible schedule)</option>
-                        <option value="3">3 - Average (Some flexibility)</option>
-                        <option value="2">2 - Limited (Little flexibility)</option>
-                        <option value="1">1 - Poor (No flexibility)</option>
-                    </select>
-                    <div class="help-text">Flexibility in working hours and schedule</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-travel">Travel Requirement (%)</label>
-                    <input type="number" id="${offerId}-travel" placeholder="0" min="0" max="100" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Percentage of time requiring travel</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="${offerId}-leadership">Leadership Role</label>
-                    <select id="${offerId}-leadership" onchange="updateOffer('${offerId}')">
-                        <option value="">Select...</option>
-                        <option value="yes">Yes - Direct reports</option>
-                        <option value="optional">Optional - Can lead if desired</option>
-                        <option value="no">No - Individual contributor</option>
-                    </select>
-                    <div class="help-text">Management or leadership responsibilities</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Insurance Coverage</label>
-                    <div style="margin-top: 8px;">
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-health-major" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Major Health Insurance</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-health-minor" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Minor Health Insurance</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-dental" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Dental Insurance</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-vision" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Vision Insurance</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-life" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Life Insurance</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-insurance-disability" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Disability Insurance</span>
-                        </label>
+                <!-- Benefits & Bonuses Section - Collapsed by default -->
+                <div class="section-collapsible">
+                    <div class="section-header" id="${offerId}-benefits-header" onclick="toggleSection('${offerId}-benefits')">
+                        <h3>🎁 ${t('benefits')}</h3>
+                        <span class="toggle-icon">▼</span>
                     </div>
-                    <div class="help-text">Types of insurance coverage provided</div>
-                </div>
+                    <div class="section-content" id="${offerId}-benefits-content">
 
-                <div class="form-group">
-                    <label for="${offerId}-insurance-covered-sum">Insurance Covered Sum</label>
-                    <input type="number" id="${offerId}-insurance-covered-sum" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
-                    <div class="help-text">Total insurance coverage amount</div>
-                </div>
+                        <div class="form-group">
+                            <label for="${offerId}-aguinaldo">${t('aguinaldo')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-aguinaldo" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('aguinaldoHelp')}</div>
+                        </div>
 
-                <div class="form-group">
-                    <label>Company Perks</label>
-                    <div style="margin-top: 8px;">
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-gym" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Gym Membership</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-car" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Company Car</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-meals" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Meal Allowance / Free Meals</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-education" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Education / Training Budget</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-phone" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Phone / Internet Stipend</span>
-                        </label>
-                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
-                            <input type="checkbox" id="${offerId}-perk-equipment" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
-                            <span>Premium Equipment</span>
-                        </label>
+                        <div class="form-group">
+                            <label for="${offerId}-pto-days">${t('ptoDays')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-pto-days" placeholder="0" min="0" step="0.5" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('ptoDaysHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-prima-calc-method">${t('primaCalc')} <span class="optional">${t('optional')}</span></label>
+                            <select id="${offerId}-prima-calc-method" onchange="togglePrimaVacacionalMethod('${offerId}')">
+                                <option value="direct">${t('directAmount')}</option>
+                                <option value="calculated">${t('calculateFromDays')}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="${offerId}-prima-direct" style="display: block;">
+                            <label for="${offerId}-prima-vacacional">${t('primaVacacional')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-prima-vacacional" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('primaVacacionalHelp')}</div>
+                        </div>
+
+                        <div id="${offerId}-prima-calculated" style="display: none;">
+                            <div class="form-group">
+                                <label for="${offerId}-prima-days">Vacation Days for Prima</label>
+                                <input type="number" id="${offerId}-prima-days" placeholder="0" min="0" step="0.5" onchange="calculatePrimaVacacional('${offerId}')">
+                                <div class="help-text">Number of vacation days used for calculation</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="${offerId}-prima-percentage">Prima Percentage (%)</label>
+                                <input type="number" id="${offerId}-prima-percentage" placeholder="25" min="0" max="100" step="0.1" onchange="calculatePrimaVacacional('${offerId}')">
+                                <div class="help-text">Percentage of daily salary (e.g., 25%)</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Calculated Prima Vacacional</label>
+                                <div id="${offerId}-prima-calculated-value" style="font-weight: bold; color: var(--button-primary); padding: 10px; background: var(--table-header-bg); border-radius: 6px;">$0</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-medical">${t('medicalBenefits')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-medical" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('medicalBenefitsHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-benefits">${t('otherBenefits')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-benefits" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('otherBenefitsHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-relocation">${t('relocationBonus')} <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-relocation" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">${t('relocationBonusHelp')}</div>
+                        </div>
                     </div>
-                    <div class="help-text">Additional perks and benefits offered</div>
                 </div>
 
-                <div class="form-group">
-                    <label>Custom Evaluation Dimensions</label>
-                    <div id="${offerId}-custom-dimensions"></div>
-                    <button type="button" class="btn-secondary" onclick="addCustomDimension('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Dimension</button>
-                    <div class="help-text">Add your own evaluation criteria (e.g., team size, tech stack, company culture)</div>
+                <!-- Qualitative Factors Section - Collapsed by default -->
+                <div class="section-collapsible">
+                    <div class="section-header" id="${offerId}-qual-header" onclick="toggleSection('${offerId}-qual')">
+                        <h3>⭐ ${t('qualitative')}</h3>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="section-content" id="${offerId}-qual-content">
+
+                        <div class="form-group">
+                            <label for="${offerId}-work-mode">${t('workMode')} <span class="optional">${t('optional')}</span></label>
+                            <select id="${offerId}-work-mode" onchange="updateOffer('${offerId}')">
+                                <option value="">Select...</option>
+                                <option value="remote">Fully Remote</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="onsite">On-Site</option>
+                            </select>
+                            <div class="help-text">${t('workModeHelp')}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-flexibility">Work Flexibility Rating <span class="optional">${t('optional')}</span></label>
+                            <select id="${offerId}-flexibility" onchange="updateOffer('${offerId}')">
+                                <option value="">Select...</option>
+                                <option value="5">5 - Excellent (Very flexible schedule)</option>
+                                <option value="4">4 - Good (Flexible schedule)</option>
+                                <option value="3">3 - Average (Some flexibility)</option>
+                                <option value="2">2 - Limited (Little flexibility)</option>
+                                <option value="1">1 - Poor (No flexibility)</option>
+                            </select>
+                            <div class="help-text">Flexibility in working hours and schedule</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-travel">Travel Requirement (%) <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-travel" placeholder="0" min="0" max="100" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">Percentage of time requiring travel</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-leadership">Leadership Role <span class="optional">${t('optional')}</span></label>
+                            <select id="${offerId}-leadership" onchange="updateOffer('${offerId}')">
+                                <option value="">Select...</option>
+                                <option value="yes">Yes - Direct reports</option>
+                                <option value="optional">Optional - Can lead if desired</option>
+                                <option value="no">No - Individual contributor</option>
+                            </select>
+                            <div class="help-text">Management or leadership responsibilities</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Insurance Coverage <span class="optional">${t('optional')}</span></label>
+                            <div style="margin-top: 8px;">
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-health-major" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Major Health Insurance</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-health-minor" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Minor Health Insurance</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-dental" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Dental Insurance</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-vision" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Vision Insurance</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-life" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Life Insurance</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-insurance-disability" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Disability Insurance</span>
+                                </label>
+                            </div>
+                            <div class="help-text">Types of insurance coverage provided</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="${offerId}-insurance-covered-sum">Insurance Covered Sum <span class="optional">${t('optional')}</span></label>
+                            <input type="number" id="${offerId}-insurance-covered-sum" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                            <div class="help-text">Total insurance coverage amount</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Perks <span class="optional">${t('optional')}</span></label>
+                            <div style="margin-top: 8px;">
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-gym" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Gym Membership</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-car" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Company Car</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-meals" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Meal Allowance / Free Meals</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-education" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Education / Training Budget</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-phone" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Phone / Internet Stipend</span>
+                                </label>
+                                <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="${offerId}-perk-equipment" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                                    <span>Premium Equipment</span>
+                                </label>
+                            </div>
+                            <div class="help-text">Additional perks and benefits offered</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Custom Bonuses</label>
-                    <div id="${offerId}-custom-bonuses"></div>
-                    <button type="button" class="btn-secondary" onclick="addCustomBonus('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Bonus</button>
-                    <div class="help-text">Add specific bonuses at custom timeframes (e.g., 1-year retention bonus)</div>
+                <!-- Custom Dimensions Section - Collapsed by default -->
+                <div class="section-collapsible">
+                    <div class="section-header" id="${offerId}-custom-header" onclick="toggleSection('${offerId}-custom')">
+                        <h3>🔧 ${t('customDimensions')}</h3>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="section-content" id="${offerId}-custom-content">
+                        <div class="form-group">
+                            <label>Custom Evaluation Dimensions</label>
+                            <div id="${offerId}-custom-dimensions"></div>
+                            <button type="button" class="btn-secondary" onclick="addCustomDimension('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Dimension</button>
+                            <div class="help-text">Add your own evaluation criteria (e.g., team size, tech stack, company culture)</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Custom Bonuses</label>
+                            <div id="${offerId}-custom-bonuses"></div>
+                            <button type="button" class="btn-secondary" onclick="addCustomBonus('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Bonus</button>
+                            <div class="help-text">Add specific bonuses at custom timeframes (e.g., 1-year retention bonus)</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="total-display">
-                    <h3>First Year Total</h3>
+                    <h3>${t('firstYearTotal')}</h3>
                     <div class="amount" id="${offerId}-total">$0</div>
                 </div>
 
                 <div class="button-container">
-                    <button class="btn-secondary" onclick="updateOffer('${offerId}')">Calculate</button>
-                    <button class="btn-remove" onclick="removeOffer('${offerId}')">Remove</button>
+                    <button class="btn-secondary" onclick="updateOffer('${offerId}')">${t('calculate')}</button>
+                    <button class="btn-remove" onclick="removeOffer('${offerId}')">${t('remove')}</button>
                 </div>
             `;
 
@@ -1785,6 +2245,7 @@
 
         // Initialize with one offer
         window.onload = function() {
+            initializePreferences();
             addOffer();
         };
     </script>
