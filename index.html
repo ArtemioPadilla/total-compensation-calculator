@@ -645,6 +645,124 @@
                     <div class="help-text">One-time relocation assistance</div>
                 </div>
 
+                <h2 style="margin-top: 25px; border-top: 2px solid #e0e0e0; padding-top: 20px;">Non-Monetary Benefits & Aspects</h2>
+
+                <div class="form-group">
+                    <label for="${offerId}-work-mode">Work Mode</label>
+                    <select id="${offerId}-work-mode" onchange="updateOffer('${offerId}')">
+                        <option value="">Select...</option>
+                        <option value="remote">Fully Remote</option>
+                        <option value="hybrid">Hybrid</option>
+                        <option value="onsite">On-Site</option>
+                    </select>
+                    <div class="help-text">Remote, hybrid, or on-site work arrangement</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-flexibility">Work Flexibility Rating</label>
+                    <select id="${offerId}-flexibility" onchange="updateOffer('${offerId}')">
+                        <option value="">Select...</option>
+                        <option value="5">5 - Excellent (Very flexible schedule)</option>
+                        <option value="4">4 - Good (Flexible schedule)</option>
+                        <option value="3">3 - Average (Some flexibility)</option>
+                        <option value="2">2 - Limited (Little flexibility)</option>
+                        <option value="1">1 - Poor (No flexibility)</option>
+                    </select>
+                    <div class="help-text">Flexibility in working hours and schedule</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-travel">Travel Requirement (%)</label>
+                    <input type="number" id="${offerId}-travel" placeholder="0" min="0" max="100" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Percentage of time requiring travel</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-leadership">Leadership Role</label>
+                    <select id="${offerId}-leadership" onchange="updateOffer('${offerId}')">
+                        <option value="">Select...</option>
+                        <option value="yes">Yes - Direct reports</option>
+                        <option value="optional">Optional - Can lead if desired</option>
+                        <option value="no">No - Individual contributor</option>
+                    </select>
+                    <div class="help-text">Management or leadership responsibilities</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Insurance Coverage</label>
+                    <div style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-health-major" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Major Health Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-health-minor" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Minor Health Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-dental" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Dental Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-vision" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Vision Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-life" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Life Insurance</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-insurance-disability" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Disability Insurance</span>
+                        </label>
+                    </div>
+                    <div class="help-text">Types of insurance coverage provided</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="${offerId}-insurance-covered-sum">Insurance Covered Sum</label>
+                    <input type="number" id="${offerId}-insurance-covered-sum" placeholder="0" min="0" onchange="updateOffer('${offerId}')">
+                    <div class="help-text">Total insurance coverage amount</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Company Perks</label>
+                    <div style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-gym" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Gym Membership</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-car" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Company Car</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-meals" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Meal Allowance / Free Meals</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-education" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Education / Training Budget</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-phone" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Phone / Internet Stipend</span>
+                        </label>
+                        <label style="display: flex; align-items: center; margin-bottom: 5px; font-weight: normal;">
+                            <input type="checkbox" id="${offerId}-perk-equipment" onchange="updateOffer('${offerId}')" style="width: auto; margin-right: 8px;">
+                            <span>Premium Equipment</span>
+                        </label>
+                    </div>
+                    <div class="help-text">Additional perks and benefits offered</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Custom Evaluation Dimensions</label>
+                    <div id="${offerId}-custom-dimensions"></div>
+                    <button type="button" class="btn-secondary" onclick="addCustomDimension('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Dimension</button>
+                    <div class="help-text">Add your own evaluation criteria (e.g., team size, tech stack, company culture)</div>
+                </div>
+
                 <div class="form-group">
                     <label>Custom Bonuses</label>
                     <div id="${offerId}-custom-bonuses"></div>
@@ -685,7 +803,30 @@
                 relocation: 0,
                 customBonuses: [],
                 firstYearTotal: 0,
-                ongoingAnnual: 0
+                ongoingAnnual: 0,
+                // Non-monetary benefits and aspects
+                workMode: '',
+                flexibility: '',
+                travel: 0,
+                leadership: '',
+                insurance: {
+                    healthMajor: false,
+                    healthMinor: false,
+                    dental: false,
+                    vision: false,
+                    life: false,
+                    disability: false
+                },
+                insuranceCoveredSum: 0,
+                perks: {
+                    gym: false,
+                    car: false,
+                    meals: false,
+                    education: false,
+                    phone: false,
+                    equipment: false
+                },
+                customDimensions: []
             };
 
             updateComparison();
@@ -837,6 +978,62 @@
             updateOffer(offerId);
         }
 
+        let customDimensionCount = 0;
+        function addCustomDimension(offerId) {
+            const container = document.getElementById(`${offerId}-custom-dimensions`);
+            const dimensionId = `${offerId}-dimension-${customDimensionCount++}`;
+            
+            const dimensionDiv = document.createElement('div');
+            dimensionDiv.id = dimensionId;
+            dimensionDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start;';
+            dimensionDiv.innerHTML = `
+                <div style="flex: 2;">
+                    <input type="text" id="${dimensionId}-name" placeholder="Culture Rating" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomDimensions('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Dimension Name</div>
+                </div>
+                <div style="flex: 2;">
+                    <input type="text" id="${dimensionId}-value" placeholder="Excellent" 
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomDimensions('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Value/Rating</div>
+                </div>
+                <button type="button" onclick="removeCustomDimension('${offerId}', '${dimensionId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0;">✕</button>
+            `;
+            container.appendChild(dimensionDiv);
+        }
+
+        function removeCustomDimension(offerId, dimensionId) {
+            const element = document.getElementById(dimensionId);
+            if (element) {
+                element.remove();
+            }
+            updateCustomDimensions(offerId);
+        }
+
+        function updateCustomDimensions(offerId) {
+            const container = document.getElementById(`${offerId}-custom-dimensions`);
+            const dimensions = [];
+            
+            Array.from(container.children).forEach(child => {
+                const nameInput = child.querySelector('[id$="-name"]');
+                const valueInput = child.querySelector('[id$="-value"]');
+                
+                if (nameInput && valueInput) {
+                    const name = nameInput.value || 'Custom Dimension';
+                    const value = valueInput.value || '';
+                    if (name && value) {
+                        dimensions.push({ name, value });
+                    }
+                }
+            });
+            
+            offers[offerId].customDimensions = dimensions;
+            updateOffer(offerId);
+        }
+
         function togglePrimaVacacionalMethod(offerId) {
             const method = document.getElementById(`${offerId}-prima-calc-method`).value;
             const directDiv = document.getElementById(`${offerId}-prima-direct`);
@@ -940,6 +1137,32 @@
             // Calculate ongoing annual compensation (after first year, no one-time bonuses)
             const ongoingAnnual = annualSalary + annualStockValue + annualBonus + aguinaldo + primaVacacional + medical + benefits;
 
+            // Capture non-monetary benefits and aspects
+            const workMode = document.getElementById(`${offerId}-work-mode`).value;
+            const flexibility = document.getElementById(`${offerId}-flexibility`).value;
+            const travel = parseFloat(document.getElementById(`${offerId}-travel`).value) || 0;
+            const leadership = document.getElementById(`${offerId}-leadership`).value;
+            
+            const insurance = {
+                healthMajor: document.getElementById(`${offerId}-insurance-health-major`).checked,
+                healthMinor: document.getElementById(`${offerId}-insurance-health-minor`).checked,
+                dental: document.getElementById(`${offerId}-insurance-dental`).checked,
+                vision: document.getElementById(`${offerId}-insurance-vision`).checked,
+                life: document.getElementById(`${offerId}-insurance-life`).checked,
+                disability: document.getElementById(`${offerId}-insurance-disability`).checked
+            };
+            
+            const insuranceCoveredSum = parseFloat(document.getElementById(`${offerId}-insurance-covered-sum`).value) || 0;
+            
+            const perks = {
+                gym: document.getElementById(`${offerId}-perk-gym`).checked,
+                car: document.getElementById(`${offerId}-perk-car`).checked,
+                meals: document.getElementById(`${offerId}-perk-meals`).checked,
+                education: document.getElementById(`${offerId}-perk-education`).checked,
+                phone: document.getElementById(`${offerId}-perk-phone`).checked,
+                equipment: document.getElementById(`${offerId}-perk-equipment`).checked
+            };
+
             offers[offerId] = {
                 ...offers[offerId],
                 company: company || `Offer ${offerId.split('-')[1]}`,
@@ -958,7 +1181,14 @@
                 benefits: benefits,
                 relocation: relocation,
                 firstYearTotal: firstYearTotal,
-                ongoingAnnual: ongoingAnnual
+                ongoingAnnual: ongoingAnnual,
+                workMode: workMode,
+                flexibility: flexibility,
+                travel: travel,
+                leadership: leadership,
+                insurance: insurance,
+                insuranceCoveredSum: insuranceCoveredSum,
+                perks: perks
             };
 
             // Update display
@@ -1005,6 +1235,26 @@
                 { label: 'First Year Total', key: 'firstYearTotal', isBold: true },
                 { label: 'Ongoing Annual (Year 2+)', key: 'ongoingAnnual', isBold: true }
             ];
+            
+            // Add non-monetary benefits section header
+            const nonMonetaryRows = [
+                { label: 'Work Mode', key: 'workMode', isText: true, formatter: (v) => {
+                    const modes = { remote: 'Fully Remote', hybrid: 'Hybrid', onsite: 'On-Site' };
+                    return modes[v] || v || '-';
+                }},
+                { label: 'Work Flexibility', key: 'flexibility', isText: true, formatter: (v) => {
+                    const ratings = { '5': '⭐⭐⭐⭐⭐ Excellent', '4': '⭐⭐⭐⭐ Good', '3': '⭐⭐⭐ Average', '2': '⭐⭐ Limited', '1': '⭐ Poor' };
+                    return ratings[v] || v || '-';
+                }},
+                { label: 'Travel Required', key: 'travel', isNumber: true, formatter: (v) => v ? `${v}%` : '-' },
+                { label: 'Leadership Role', key: 'leadership', isText: true, formatter: (v) => {
+                    const roles = { yes: 'Yes - Direct reports', optional: 'Optional - Can lead if desired', no: 'No - Individual contributor' };
+                    return roles[v] || v || '-';
+                }},
+                { label: 'Insurance Coverage', key: 'insurance', isObject: true },
+                { label: 'Insurance Covered Sum', key: 'insuranceCoveredSum' },
+                { label: 'Company Perks', key: 'perks', isObject: true }
+            ];
 
             let tableHTML = '';
             rows.forEach(row => {
@@ -1026,6 +1276,76 @@
                 
                 tableHTML += `</tr>`;
             });
+            
+            // Add separator row for non-monetary section
+            tableHTML += `<tr style="background: #f0f0f0;"><td colspan="${offerKeys.length + 1}" style="text-align: center; font-weight: bold; padding: 12px; color: #667eea;">NON-MONETARY BENEFITS & ASPECTS</td></tr>`;
+            
+            // Add non-monetary rows
+            nonMonetaryRows.forEach(row => {
+                tableHTML += `<tr>`;
+                tableHTML += `<td>${row.label}</td>`;
+                
+                offerKeys.forEach(key => {
+                    const value = offers[key][row.key];
+                    let displayValue = '-';
+                    
+                    if (row.isObject) {
+                        // Handle insurance and perks objects
+                        if (value && typeof value === 'object') {
+                            const checkedItems = Object.entries(value)
+                                .filter(([k, v]) => v)
+                                .map(([k, v]) => {
+                                    // Special formatting for health insurance types
+                                    if (k === 'healthMajor') return 'Major Health';
+                                    if (k === 'healthMinor') return 'Minor Health';
+                                    // Capitalize first letter for others
+                                    return k.charAt(0).toUpperCase() + k.slice(1);
+                                });
+                            displayValue = checkedItems.length > 0 ? checkedItems.join(', ') : 'None';
+                        }
+                    } else if (row.formatter) {
+                        displayValue = row.formatter(value);
+                    } else if (row.isText) {
+                        displayValue = value || '-';
+                    } else if (row.isNumber) {
+                        displayValue = value || '-';
+                    } else {
+                        // Default formatting for monetary values
+                        displayValue = value ? formatCurrency(value) : '-';
+                    }
+                    
+                    tableHTML += `<td>${displayValue}</td>`;
+                });
+                
+                tableHTML += `</tr>`;
+            });
+            
+            // Add custom dimensions if any offer has them
+            const allCustomDimensions = new Set();
+            offerKeys.forEach(key => {
+                if (offers[key].customDimensions && offers[key].customDimensions.length > 0) {
+                    offers[key].customDimensions.forEach(dim => {
+                        allCustomDimensions.add(dim.name);
+                    });
+                }
+            });
+            
+            if (allCustomDimensions.size > 0) {
+                tableHTML += `<tr style="background: #f0f0f0;"><td colspan="${offerKeys.length + 1}" style="text-align: center; font-weight: bold; padding: 12px; color: #667eea;">CUSTOM EVALUATION DIMENSIONS</td></tr>`;
+                
+                allCustomDimensions.forEach(dimName => {
+                    tableHTML += `<tr>`;
+                    tableHTML += `<td>${dimName}</td>`;
+                    
+                    offerKeys.forEach(key => {
+                        const dimension = offers[key].customDimensions.find(d => d.name === dimName);
+                        const displayValue = dimension ? dimension.value : '-';
+                        tableHTML += `<td>${displayValue}</td>`;
+                    });
+                    
+                    tableHTML += `</tr>`;
+                });
+            }
 
             document.getElementById('comparisonBody').innerHTML = tableHTML;
             
