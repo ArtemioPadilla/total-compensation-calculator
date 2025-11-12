@@ -1236,7 +1236,9 @@
                 insuranceCoverageLabel.childNodes[0].textContent = t('insuranceCoverageLabel') + ' ';
                 if (optionalSpan) optionalSpan.textContent = t('optional');
             }
-            updateHelpText(`${offerId}-insurance-health-major`, 'insuranceCoverageHelp');
+            // Update insurance coverage help text
+            const insuranceHelpText = card.querySelector(`#${offerId}-qual-content > div:nth-child(5) > .help-text`);
+            if (insuranceHelpText) insuranceHelpText.textContent = t('insuranceCoverageHelp');
             
             // Update insurance checkbox labels
             const insuranceContainer = card.querySelector(`#${offerId}-qual-content > div:nth-child(5) > div`);
@@ -1262,7 +1264,9 @@
                 companyPerksLabel.childNodes[0].textContent = t('companyPerksLabel') + ' ';
                 if (optionalSpan) optionalSpan.textContent = t('optional');
             }
-            updateHelpText(`${offerId}-perk-gym`, 'companyPerksHelp');
+            // Update company perks help text
+            const perksHelpText = card.querySelector(`#${offerId}-qual-content > div:nth-child(7) > .help-text`);
+            if (perksHelpText) perksHelpText.textContent = t('companyPerksHelp');
             
             // Update perk checkbox labels
             const perksContainer = card.querySelector(`#${offerId}-qual-content > div:nth-child(7) > div`);
@@ -1318,13 +1322,14 @@
             if (totalTitle) totalTitle.textContent = t('firstYearTotal');
             
             // Update buttons
-            const calculateBtn = card.querySelector('.btn-secondary');
-            if (calculateBtn && calculateBtn.textContent.includes('alculate')) {
-                calculateBtn.textContent = t('calculate');
+            const buttonContainer = card.querySelector('.button-container');
+            if (buttonContainer) {
+                const calculateBtn = buttonContainer.querySelector('.btn-secondary');
+                if (calculateBtn) calculateBtn.textContent = t('calculate');
+                
+                const removeBtn = buttonContainer.querySelector('.btn-remove');
+                if (removeBtn) removeBtn.textContent = t('remove');
             }
-            
-            const removeBtn = card.querySelector('.btn-remove');
-            if (removeBtn) removeBtn.textContent = t('remove');
         }
 
         // Initialize theme and language from localStorage
