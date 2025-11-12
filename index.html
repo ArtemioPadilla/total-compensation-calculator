@@ -832,10 +832,11 @@
         }
 
         function updateTranslations() {
-            // Ensure translations are loaded before attempting to update
-            if (!translations || !currentLang || !translations[currentLang]) {
-                console.warn('Translations not fully initialized');
-                return;
+            // Ensure currentLang is valid (should always be 'en' or 'es' at this point)
+            if (!currentLang || !translations[currentLang]) {
+                console.error('Invalid language setting:', currentLang);
+                // Fallback to English
+                currentLang = 'en';
             }
             
             document.getElementById('header-title').textContent = t('headerTitle');
@@ -893,12 +894,13 @@
             
             document.documentElement.setAttribute('data-theme', currentTheme);
             
-            // Ensure currentLang is set before calling any translation functions
-            if (savedLang) {
+            // Ensure currentLang is set to a valid value before calling any translation functions
+            // Validate that savedLang is one of the supported languages
+            if (savedLang && (savedLang === 'en' || savedLang === 'es')) {
                 currentLang = savedLang;
             } else {
-                // Default to 'en' if not set
-                currentLang = currentLang || 'en';
+                // Default to 'en' if not set or invalid
+                currentLang = 'en';
             }
             
             document.documentElement.setAttribute('lang', currentLang === 'en' ? 'en' : 'es');
