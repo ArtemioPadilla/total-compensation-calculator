@@ -803,6 +803,7 @@
                 valueRating: 'Value/Rating',
                 addCustomDimensionBtn: '+ Add Custom Dimension',
                 customDimensionsHelp: 'Add your own evaluation criteria',
+                customBonuses: 'Custom Bonuses',
                 vacationDaysForPrima: 'Vacation Days for Prima',
                 vacationDaysHelp: 'Number of vacation days used for calculation',
                 primaPercentage: 'Prima Percentage (%)',
@@ -945,6 +946,7 @@
                 valueRating: 'Valor/Calificación',
                 addCustomDimensionBtn: '+ Agregar Dimensión Personalizada',
                 customDimensionsHelp: 'Agregar tus propios criterios de evaluación',
+                customBonuses: 'Bonos Personalizados',
                 vacationDaysForPrima: 'Días de Vacaciones para Prima',
                 vacationDaysHelp: 'Número de días de vacaciones usados para el cálculo',
                 primaPercentage: 'Porcentaje de Prima (%)',
@@ -1237,14 +1239,17 @@
             updateHelpText(`${offerId}-insurance-health-major`, 'insuranceCoverageHelp');
             
             // Update insurance checkbox labels
-            const insuranceLabels = card.querySelectorAll(`#${offerId}-qual-content > div:nth-child(5) label span`);
-            if (insuranceLabels.length >= 6) {
-                insuranceLabels[0].textContent = t('majorHealthInsurance');
-                insuranceLabels[1].textContent = t('minorHealthInsurance');
-                insuranceLabels[2].textContent = t('dentalInsurance');
-                insuranceLabels[3].textContent = t('visionInsurance');
-                insuranceLabels[4].textContent = t('lifeInsurance');
-                insuranceLabels[5].textContent = t('disabilityInsurance');
+            const insuranceContainer = card.querySelector(`#${offerId}-qual-content > div:nth-child(5) > div`);
+            if (insuranceContainer) {
+                const insuranceCheckboxLabels = insuranceContainer.querySelectorAll('label > span');
+                if (insuranceCheckboxLabels.length >= 6) {
+                    insuranceCheckboxLabels[0].textContent = t('majorHealthInsurance');
+                    insuranceCheckboxLabels[1].textContent = t('minorHealthInsurance');
+                    insuranceCheckboxLabels[2].textContent = t('dentalInsurance');
+                    insuranceCheckboxLabels[3].textContent = t('visionInsurance');
+                    insuranceCheckboxLabels[4].textContent = t('lifeInsurance');
+                    insuranceCheckboxLabels[5].textContent = t('disabilityInsurance');
+                }
             }
             
             updateLabel(`${offerId}-insurance-covered-sum`, 'insuranceCoveredSumLabel', true);
@@ -1260,22 +1265,25 @@
             updateHelpText(`${offerId}-perk-gym`, 'companyPerksHelp');
             
             // Update perk checkbox labels
-            const perkLabels = card.querySelectorAll(`#${offerId}-qual-content > div:nth-child(7) label span`);
-            if (perkLabels.length >= 6) {
-                perkLabels[0].textContent = t('gymMembership');
-                perkLabels[1].textContent = t('companyCar');
-                perkLabels[2].textContent = t('mealAllowance');
-                perkLabels[3].textContent = t('educationBudget');
-                perkLabels[4].textContent = t('phoneStipend');
-                perkLabels[5].textContent = t('premiumEquipment');
+            const perksContainer = card.querySelector(`#${offerId}-qual-content > div:nth-child(7) > div`);
+            if (perksContainer) {
+                const perkCheckboxLabels = perksContainer.querySelectorAll('label > span');
+                if (perkCheckboxLabels.length >= 6) {
+                    perkCheckboxLabels[0].textContent = t('gymMembership');
+                    perkCheckboxLabels[1].textContent = t('companyCar');
+                    perkCheckboxLabels[2].textContent = t('mealAllowance');
+                    perkCheckboxLabels[3].textContent = t('educationBudget');
+                    perkCheckboxLabels[4].textContent = t('phoneStipend');
+                    perkCheckboxLabels[5].textContent = t('premiumEquipment');
+                }
             }
             
             // Update custom dimensions section
-            const customDimLabel = card.querySelector(`#${offerId}-custom-content .form-group:first-child label`);
+            const customDimLabel = card.querySelector(`#${offerId}-custom-content .form-group:first-child > label`);
             if (customDimLabel) customDimLabel.textContent = t('customDimensions');
             const customDimBtn = card.querySelector(`button[onclick*="addCustomDimension('${offerId}')"]`);
             if (customDimBtn) customDimBtn.textContent = t('addCustomDimensionBtn');
-            const customDimHelp = card.querySelector(`#${offerId}-custom-content .form-group:first-child .help-text`);
+            const customDimHelp = card.querySelector(`#${offerId}-custom-content .form-group:first-child > .help-text`);
             if (customDimHelp) customDimHelp.textContent = t('customDimensionsHelp');
             
             // Update custom dimension entries
@@ -1287,13 +1295,13 @@
             });
             
             // Update custom bonuses section
-            const customBonusLabel = card.querySelector(`#${offerId}-custom-content .form-group:nth-child(2) label`);
-            if (customBonusLabel && customBonusLabel.textContent.includes('Custom Bonuses')) {
-                customBonusLabel.textContent = t('customBonusesHelp').split('(')[0].trim();
+            const customBonusLabel = card.querySelector(`#${offerId}-custom-content .form-group:nth-child(2) > label`);
+            if (customBonusLabel) {
+                customBonusLabel.textContent = t('customBonuses');
             }
             const customBonusBtn = card.querySelector(`button[onclick*="addCustomBonus('${offerId}')"]`);
             if (customBonusBtn) customBonusBtn.textContent = t('addCustomBonus');
-            const customBonusHelp = card.querySelector(`#${offerId}-custom-content .form-group:nth-child(2) .help-text`);
+            const customBonusHelp = card.querySelector(`#${offerId}-custom-content .form-group:nth-child(2) > .help-text`);
             if (customBonusHelp) customBonusHelp.textContent = t('customBonusesHelp');
             
             // Update custom bonus entries
@@ -1673,17 +1681,17 @@
                     </div>
                     <div class="section-content" id="${offerId}-custom-content">
                         <div class="form-group">
-                            <label>Custom Evaluation Dimensions</label>
+                            <label>${t('customDimensions')}</label>
                             <div id="${offerId}-custom-dimensions"></div>
-                            <button type="button" class="btn-secondary" onclick="addCustomDimension('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Dimension</button>
-                            <div class="help-text">Add your own evaluation criteria (e.g., team size, tech stack, company culture)</div>
+                            <button type="button" class="btn-secondary" onclick="addCustomDimension('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">${t('addCustomDimensionBtn')}</button>
+                            <div class="help-text">${t('customDimensionsHelp')}</div>
                         </div>
 
                         <div class="form-group">
-                            <label>Custom Bonuses</label>
+                            <label>${t('customBonuses')}</label>
                             <div id="${offerId}-custom-bonuses"></div>
-                            <button type="button" class="btn-secondary" onclick="addCustomBonus('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">+ Add Custom Bonus</button>
-                            <div class="help-text">Add specific bonuses at custom timeframes (e.g., 1-year retention bonus)</div>
+                            <button type="button" class="btn-secondary" onclick="addCustomBonus('${offerId}')" style="margin-top: 8px; padding: 6px 12px; font-size: 14px;">${t('addCustomBonus')}</button>
+                            <div class="help-text">${t('customBonusesHelp')}</div>
                         </div>
                     </div>
                 </div>
