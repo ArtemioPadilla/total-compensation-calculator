@@ -5,7 +5,9 @@ A static web application to compare job offers with all compensation dimensions 
 ## Features
 
 - 💰 **Comprehensive Compensation Analysis**: Track base salary, stock grants, signing bonuses, annual bonuses, medical benefits, other benefits, and relocation assistance
-- 📊 **Side-by-Side Comparison**: Compare multiple job offers in an easy-to-read comparison table
+- 🌟 **Multi-Dimensional Evaluation**: Compare non-monetary aspects including work mode (remote/hybrid/on-site), work flexibility, travel requirements, leadership roles, insurance coverage, and company perks
+- 🎯 **Extensible Custom Dimensions**: Add your own evaluation criteria (team size, tech stack, company culture, etc.) to create a personalized job comparison framework
+- 📊 **Side-by-Side Comparison**: Compare multiple job offers in an easy-to-read comparison table with both monetary and non-monetary factors
 - 🏆 **Best Offer Highlighting**: Automatically highlights the best values in green with a "BEST" badge
 - 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - 🎨 **Modern UI**: Clean, professional interface with gradient backgrounds and smooth animations
@@ -25,9 +27,19 @@ A static web application to compare job offers with all compensation dimensions 
    - Medical benefits (annual, e.g., health, dental, vision insurance)
    - Other benefits (annual, e.g., 401k match, gym, commuter)
    - Relocation bonus (one-time)
-4. **Calculate**: Click "Calculate" to update the totals
-5. **Compare**: View the comparison table to see all offers side-by-side
-6. **Remove**: Click "Remove" to delete offers you don't need
+4. **Add Non-Monetary Benefits**: Evaluate qualitative aspects:
+   - Work mode (remote/hybrid/on-site)
+   - Work flexibility rating (1-5 stars)
+   - Travel requirement percentage
+   - Leadership role expectations
+   - Insurance types (health, dental, vision, life, disability)
+   - Company perks (gym, car, meals, education, phone stipend, equipment)
+5. **Add Custom Dimensions**: Create your own evaluation criteria:
+   - Click "+ Add Custom Dimension" to add personalized factors
+   - Examples: Team size, Tech stack preference, Company culture rating, Commute time, Career growth potential
+6. **Calculate**: Click "Calculate" to update the totals
+7. **Compare**: View the comparison table to see all offers side-by-side with both monetary and non-monetary factors
+8. **Remove**: Click "Remove" to delete offers you don't need
 
 ## Compensation Breakdown
 
