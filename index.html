@@ -2140,6 +2140,317 @@
         let offerCount = 0;
         let offers = {};
 
+        // ========================================
+        // Local Storage - Save/Load Progress
+        // ========================================
+        
+        const STORAGE_KEY = 'totalCompensationCalculator_offers';
+        
+        // Save all offers form data to localStorage
+        function saveOffersToLocalStorage() {
+            try {
+                const formData = {};
+                const offerKeys = Object.keys(offers);
+                
+                offerKeys.forEach(offerId => {
+                    const offer = offers[offerId];
+                    formData[offerId] = {
+                        // Basic info
+                        company: document.getElementById(`${offerId}-company`)?.value || '',
+                        position: document.getElementById(`${offerId}-position`)?.value || '',
+                        salary: document.getElementById(`${offerId}-salary`)?.value || '',
+                        period: document.getElementById(`${offerId}-period`)?.value || 'annual',
+                        // Compensation
+                        stocks: document.getElementById(`${offerId}-stocks`)?.value || '',
+                        vesting: document.getElementById(`${offerId}-vesting`)?.value || '4',
+                        vestingType: document.getElementById(`${offerId}-vesting-type`)?.value || 'linear',
+                        vestingSchedule: offer.vestingSchedule || [],
+                        signing: document.getElementById(`${offerId}-signing`)?.value || '',
+                        annualBonus: document.getElementById(`${offerId}-annual-bonus`)?.value || '',
+                        // Benefits
+                        aguinaldo: document.getElementById(`${offerId}-aguinaldo`)?.value || '',
+                        ptoDays: document.getElementById(`${offerId}-pto-days`)?.value || '',
+                        primaCalcMethod: document.getElementById(`${offerId}-prima-calc-method`)?.value || 'direct',
+                        primaVacacional: document.getElementById(`${offerId}-prima-vacacional`)?.value || '',
+                        primaDays: document.getElementById(`${offerId}-prima-days`)?.value || '',
+                        primaPercentage: document.getElementById(`${offerId}-prima-percentage`)?.value || '',
+                        medical: document.getElementById(`${offerId}-medical`)?.value || '',
+                        benefits: document.getElementById(`${offerId}-benefits`)?.value || '',
+                        relocation: document.getElementById(`${offerId}-relocation`)?.value || '',
+                        // Non-monetary
+                        workMode: document.getElementById(`${offerId}-work-mode`)?.value || '',
+                        flexibility: document.getElementById(`${offerId}-flexibility`)?.value || '',
+                        travel: document.getElementById(`${offerId}-travel`)?.value || '',
+                        leadership: document.getElementById(`${offerId}-leadership`)?.value || '',
+                        // Insurance
+                        insuranceHealthMajor: document.getElementById(`${offerId}-insurance-health-major`)?.checked || false,
+                        insuranceHealthMinor: document.getElementById(`${offerId}-insurance-health-minor`)?.checked || false,
+                        insuranceDental: document.getElementById(`${offerId}-insurance-dental`)?.checked || false,
+                        insuranceVision: document.getElementById(`${offerId}-insurance-vision`)?.checked || false,
+                        insuranceLife: document.getElementById(`${offerId}-insurance-life`)?.checked || false,
+                        insuranceDisability: document.getElementById(`${offerId}-insurance-disability`)?.checked || false,
+                        insuranceCoveredSum: document.getElementById(`${offerId}-insurance-covered-sum`)?.value || '',
+                        // Perks
+                        perkGym: document.getElementById(`${offerId}-perk-gym`)?.checked || false,
+                        perkCar: document.getElementById(`${offerId}-perk-car`)?.checked || false,
+                        perkMeals: document.getElementById(`${offerId}-perk-meals`)?.checked || false,
+                        perkEducation: document.getElementById(`${offerId}-perk-education`)?.checked || false,
+                        perkPhone: document.getElementById(`${offerId}-perk-phone`)?.checked || false,
+                        perkEquipment: document.getElementById(`${offerId}-perk-equipment`)?.checked || false,
+                        // Custom data
+                        customDimensions: offer.customDimensions || [],
+                        customBonuses: offer.customBonuses || []
+                    };
+                });
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    offerCount: offerCount,
+                    formData: formData
+                }));
+            } catch (e) {
+                console.error('Error saving offers to localStorage:', e);
+            }
+        }
+        
+        // Load offers from localStorage and restore UI
+        function loadOffersFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (!saved) return false;
+                
+                const data = JSON.parse(saved);
+                if (!data.formData || Object.keys(data.formData).length === 0) return false;
+                
+                // Get sorted offer IDs to restore in order
+                const sortedOfferIds = Object.keys(data.formData).sort((a, b) => {
+                    const numA = parseInt(a.split('-')[1]);
+                    const numB = parseInt(b.split('-')[1]);
+                    return numA - numB;
+                });
+                
+                // Recreate each offer by calling addOffer then restoring values
+                sortedOfferIds.forEach(savedOfferId => {
+                    const savedOffer = data.formData[savedOfferId];
+                    
+                    // Call addOffer which will increment offerCount and create the card
+                    addOffer();
+                    
+                    // Get the actual offerId that was created
+                    const actualOfferId = `offer-${offerCount}`;
+                    
+                    // Restore values into the form
+                    restoreOfferValues(actualOfferId, savedOffer);
+                });
+                
+                return true;
+            } catch (e) {
+                console.error('Error loading offers from localStorage:', e);
+                return false;
+            }
+        }
+        
+        // Restore form values for an offer
+        function restoreOfferValues(offerId, savedData) {
+            // Restore basic input values
+            setInputValue(`${offerId}-company`, savedData.company);
+            setInputValue(`${offerId}-position`, savedData.position);
+            setInputValue(`${offerId}-salary`, savedData.salary);
+            setSelectValue(`${offerId}-period`, savedData.period);
+            
+            // Compensation
+            setInputValue(`${offerId}-stocks`, savedData.stocks);
+            setInputValue(`${offerId}-vesting`, savedData.vesting);
+            setSelectValue(`${offerId}-vesting-type`, savedData.vestingType);
+            setInputValue(`${offerId}-signing`, savedData.signing);
+            setInputValue(`${offerId}-annual-bonus`, savedData.annualBonus);
+            
+            // Benefits
+            setInputValue(`${offerId}-aguinaldo`, savedData.aguinaldo);
+            setInputValue(`${offerId}-pto-days`, savedData.ptoDays);
+            setSelectValue(`${offerId}-prima-calc-method`, savedData.primaCalcMethod);
+            setInputValue(`${offerId}-prima-vacacional`, savedData.primaVacacional);
+            setInputValue(`${offerId}-prima-days`, savedData.primaDays);
+            setInputValue(`${offerId}-prima-percentage`, savedData.primaPercentage);
+            setInputValue(`${offerId}-medical`, savedData.medical);
+            setInputValue(`${offerId}-benefits`, savedData.benefits);
+            setInputValue(`${offerId}-relocation`, savedData.relocation);
+            
+            // Non-monetary
+            setSelectValue(`${offerId}-work-mode`, savedData.workMode);
+            setSelectValue(`${offerId}-flexibility`, savedData.flexibility);
+            setInputValue(`${offerId}-travel`, savedData.travel);
+            setSelectValue(`${offerId}-leadership`, savedData.leadership);
+            
+            // Insurance
+            setCheckboxValue(`${offerId}-insurance-health-major`, savedData.insuranceHealthMajor);
+            setCheckboxValue(`${offerId}-insurance-health-minor`, savedData.insuranceHealthMinor);
+            setCheckboxValue(`${offerId}-insurance-dental`, savedData.insuranceDental);
+            setCheckboxValue(`${offerId}-insurance-vision`, savedData.insuranceVision);
+            setCheckboxValue(`${offerId}-insurance-life`, savedData.insuranceLife);
+            setCheckboxValue(`${offerId}-insurance-disability`, savedData.insuranceDisability);
+            setInputValue(`${offerId}-insurance-covered-sum`, savedData.insuranceCoveredSum);
+            
+            // Perks
+            setCheckboxValue(`${offerId}-perk-gym`, savedData.perkGym);
+            setCheckboxValue(`${offerId}-perk-car`, savedData.perkCar);
+            setCheckboxValue(`${offerId}-perk-meals`, savedData.perkMeals);
+            setCheckboxValue(`${offerId}-perk-education`, savedData.perkEducation);
+            setCheckboxValue(`${offerId}-perk-phone`, savedData.perkPhone);
+            setCheckboxValue(`${offerId}-perk-equipment`, savedData.perkEquipment);
+            
+            // Restore vesting milestones if custom vesting
+            if (savedData.vestingType === 'custom' && savedData.vestingSchedule && savedData.vestingSchedule.length > 0) {
+                // Toggle the vesting schedule UI
+                toggleVestingSchedule(offerId);
+                
+                // Clear any default milestone that might have been added
+                const container = document.getElementById(`${offerId}-vesting-milestones`);
+                if (container) {
+                    container.innerHTML = '';
+                }
+                
+                // Add milestones with saved values
+                savedData.vestingSchedule.forEach(milestone => {
+                    addVestingMilestoneWithValues(offerId, milestone.months, milestone.percentage);
+                });
+                
+                offers[offerId].vestingSchedule = savedData.vestingSchedule;
+            }
+            
+            // Restore custom bonuses
+            if (savedData.customBonuses && savedData.customBonuses.length > 0) {
+                savedData.customBonuses.forEach(bonus => {
+                    addCustomBonusWithValues(offerId, bonus.name, bonus.amount, bonus.month);
+                });
+                offers[offerId].customBonuses = savedData.customBonuses;
+            }
+            
+            // Restore custom dimensions
+            if (savedData.customDimensions && savedData.customDimensions.length > 0) {
+                savedData.customDimensions.forEach(dim => {
+                    addCustomDimensionWithValues(offerId, dim.name, dim.value);
+                });
+                offers[offerId].customDimensions = savedData.customDimensions;
+            }
+            
+            // Toggle prima vacacional display if needed
+            if (savedData.primaCalcMethod === 'calculated') {
+                togglePrimaVacacionalMethod(offerId);
+            }
+            
+            // Trigger calculation to update totals
+            updateOffer(offerId);
+        }
+        
+        // Helper functions for setting form values
+        function setInputValue(id, value) {
+            const el = document.getElementById(id);
+            if (el && value !== undefined && value !== null && value !== '') {
+                el.value = value;
+            }
+        }
+        
+        function setSelectValue(id, value) {
+            const el = document.getElementById(id);
+            if (el && value) {
+                el.value = value;
+            }
+        }
+        
+        function setCheckboxValue(id, value) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.checked = !!value;
+            }
+        }
+        
+        // Add vesting milestone with pre-filled values
+        function addVestingMilestoneWithValues(offerId, months, percentage) {
+            const container = document.getElementById(`${offerId}-vesting-milestones`);
+            const milestoneId = `${offerId}-milestone-${vestingMilestoneCount++}`;
+            
+            const milestoneDiv = document.createElement('div');
+            milestoneDiv.id = milestoneId;
+            milestoneDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            milestoneDiv.innerHTML = `
+                <div style="flex: 1;">
+                    <input type="number" id="${milestoneId}-months" placeholder="12" min="0" step="0.5" value="${months || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateVestingSchedule('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Months</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${milestoneId}-percentage" placeholder="25" min="0" max="100" step="0.1" value="${percentage || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateVestingSchedule('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Percentage (%)</div>
+                </div>
+                <button type="button" onclick="removeVestingMilestone('${offerId}', '${milestoneId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-start;">✕</button>
+            `;
+            container.appendChild(milestoneDiv);
+        }
+        
+        // Add custom bonus with pre-filled values
+        function addCustomBonusWithValues(offerId, name, amount, month) {
+            const container = document.getElementById(`${offerId}-custom-bonuses`);
+            const bonusId = `${offerId}-bonus-${customBonusCount++}`;
+            
+            const bonusDiv = document.createElement('div');
+            bonusDiv.id = bonusId;
+            bonusDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start;';
+            bonusDiv.innerHTML = `
+                <div style="flex: 2;">
+                    <input type="text" id="${bonusId}-name" placeholder="Retention Bonus" value="${name || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Bonus Name</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${bonusId}-amount" placeholder="10000" min="0" value="${amount || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Amount ($)</div>
+                </div>
+                <div style="flex: 1;">
+                    <input type="number" id="${bonusId}-month" placeholder="12" min="1" max="120" value="${month || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomBonuses('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Month</div>
+                </div>
+                <button type="button" onclick="removeCustomBonus('${offerId}', '${bonusId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0;">✕</button>
+            `;
+            container.appendChild(bonusDiv);
+        }
+        
+        // Add custom dimension with pre-filled values
+        function addCustomDimensionWithValues(offerId, name, value) {
+            const container = document.getElementById(`${offerId}-custom-dimensions`);
+            const dimId = `${offerId}-dim-${customDimensionCount++}`;
+            
+            const dimDiv = document.createElement('div');
+            dimDiv.id = dimId;
+            dimDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start;';
+            dimDiv.innerHTML = `
+                <div style="flex: 2;">
+                    <input type="text" id="${dimId}-name" placeholder="Team Size" value="${name || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomDimensions('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Dimension Name</div>
+                </div>
+                <div style="flex: 2;">
+                    <input type="text" id="${dimId}-value" placeholder="10 people" value="${value || ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;" 
+                           onchange="updateCustomDimensions('${offerId}')">
+                    <div style="font-size: 11px; color: #666; margin-top: 2px;">Value</div>
+                </div>
+                <button type="button" onclick="removeCustomDimension('${offerId}', '${dimId}')" 
+                        style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 0;">✕</button>
+            `;
+            container.appendChild(dimDiv);
+        }
+
         function formatCurrency(amount) {
             return new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -2529,6 +2840,7 @@
             };
 
             updateComparison();
+            saveOffersToLocalStorage();
         }
 
         function removeOffer(offerId) {
@@ -2537,7 +2849,14 @@
                 element.remove();
             }
             delete offers[offerId];
+            if (typeof offerSatisfactionScores !== 'undefined') {
+                delete offerSatisfactionScores[offerId];
+            }
             updateComparison();
+            saveOffersToLocalStorage();
+            if (typeof saveSatisfactionPreferences === 'function') {
+                saveSatisfactionPreferences();
+            }
         }
 
         function toggleVestingSchedule(offerId) {
@@ -2894,6 +3213,7 @@
             document.getElementById(`${offerId}-total`).textContent = formatCurrency(firstYearTotal);
 
             updateComparison();
+            saveOffersToLocalStorage();
         }
 
         function updateComparison() {
@@ -4189,11 +4509,21 @@
             updateSatisfactionComparison();
         }
 
-        // Initialize with one offer
+        // Initialize with one offer or restore from localStorage
         window.onload = function() {
             initializePreferences();
             initializeSatisfactionUI();
-            addOffer();
+            
+            // Try to load saved offers from localStorage
+            const hasRestoredOffers = loadOffersFromLocalStorage();
+            
+            // If no saved offers, add a blank one
+            if (!hasRestoredOffers) {
+                addOffer();
+            }
+            
+            // Update comparison after loading
+            updateComparison();
         };
     </script>
 </body>
