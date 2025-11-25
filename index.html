@@ -1508,7 +1508,8 @@
                 factorStability: 'Stability/Security',
                 factorWorkLifeBalance: 'Work-Life Balance',
                 minThreshold: 'Min:',
-                economicNote: '💡 Economic Factor Integration: Set your salary expectations below to auto-calculate the Economic score from your compensation data.',
+                economicNoteTitle: '💡 Economic Factor Integration:',
+                economicNoteText: 'Set your salary expectations below to auto-calculate the Economic score from your compensation data.',
                 salaryMin: 'Minimum Acceptable ($)',
                 salaryTarget: 'Target Salary ($)',
                 salaryStretch: 'Stretch Goal ($)',
@@ -1704,7 +1705,8 @@
                 factorStability: 'Estabilidad/Seguridad',
                 factorWorkLifeBalance: 'Balance Vida-Trabajo',
                 minThreshold: 'Mín:',
-                economicNote: '💡 Integración de Factor Económico: Configura tus expectativas salariales abajo para auto-calcular el puntaje Económico desde tus datos de compensación.',
+                economicNoteTitle: '💡 Integración de Factor Económico:',
+                economicNoteText: 'Configura tus expectativas salariales abajo para auto-calcular el puntaje Económico desde tus datos de compensación.',
                 salaryMin: 'Mínimo Aceptable ($)',
                 salaryTarget: 'Salario Objetivo ($)',
                 salaryStretch: 'Meta Aspiracional ($)',
@@ -3550,7 +3552,19 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    satisfactionPreferences = { ...satisfactionPreferences, ...parsed };
+                    // Deep merge to preserve default nested properties
+                    if (parsed.weights) {
+                        satisfactionPreferences.weights = { ...satisfactionPreferences.weights, ...parsed.weights };
+                    }
+                    if (parsed.thresholds) {
+                        satisfactionPreferences.thresholds = { ...satisfactionPreferences.thresholds, ...parsed.thresholds };
+                    }
+                    if (parsed.salaryExpectations) {
+                        satisfactionPreferences.salaryExpectations = { ...satisfactionPreferences.salaryExpectations, ...parsed.salaryExpectations };
+                    }
+                    if (typeof parsed.useLogarithmicScale === 'boolean') {
+                        satisfactionPreferences.useLogarithmicScale = parsed.useLogarithmicScale;
+                    }
                 } catch (e) {
                     console.error('Error loading satisfaction preferences:', e);
                 }
@@ -4147,7 +4161,7 @@
             
             // Update economic note
             const economicNote = document.getElementById('economic-note');
-            if (economicNote) economicNote.innerHTML = `<strong>${t('economicNote').split(':')[0]}:</strong>${t('economicNote').split(':').slice(1).join(':')}`;
+            if (economicNote) economicNote.innerHTML = `<strong>${t('economicNoteTitle')}</strong> ${t('economicNoteText')}`;
             
             // Update salary labels
             const salaryMinLabel = document.getElementById('label-salary-min');
