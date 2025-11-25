@@ -2849,10 +2849,14 @@
                 element.remove();
             }
             delete offers[offerId];
-            delete offerSatisfactionScores[offerId];
+            if (typeof offerSatisfactionScores !== 'undefined') {
+                delete offerSatisfactionScores[offerId];
+            }
             updateComparison();
             saveOffersToLocalStorage();
-            saveSatisfactionPreferences();
+            if (typeof saveSatisfactionPreferences === 'function') {
+                saveSatisfactionPreferences();
+            }
         }
 
         function toggleVestingSchedule(offerId) {
