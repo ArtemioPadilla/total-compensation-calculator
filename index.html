@@ -573,6 +573,436 @@
             margin-right: 8px;
             border-radius: 3px;
         }
+
+        /* Satisfaction Analysis Styles */
+        .satisfaction-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--card-shadow);
+            margin-top: 30px;
+        }
+
+        .satisfaction-section h2 {
+            color: var(--button-primary);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .satisfaction-theorem {
+            background: var(--table-header-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .satisfaction-theorem .formula {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .satisfaction-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .satisfaction-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            margin-bottom: -2px;
+        }
+
+        .satisfaction-tab:hover {
+            color: var(--button-primary);
+        }
+
+        .satisfaction-tab.active {
+            color: var(--button-primary);
+            border-bottom-color: var(--button-primary);
+        }
+
+        .satisfaction-tab-content {
+            display: none;
+        }
+
+        .satisfaction-tab-content.active {
+            display: block;
+        }
+
+        .weight-config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .weight-category {
+            background: var(--table-header-bg);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .weight-category h4 {
+            color: var(--button-primary);
+            margin-bottom: 12px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weight-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .weight-item label {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .weight-slider {
+            width: 100px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border-color);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--button-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .weight-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .weight-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--button-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .weight-value {
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--button-primary);
+            font-size: 14px;
+        }
+
+        .threshold-input {
+            width: 45px;
+            padding: 4px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .threshold-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .satisfaction-score-display {
+            background: linear-gradient(135deg, var(--button-primary) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-inverse);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .satisfaction-score-display .score {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .satisfaction-score-display .score-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .satisfaction-bar {
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .satisfaction-bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+        }
+
+        .satisfaction-bar-fill.excellent {
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
+        }
+
+        .satisfaction-bar-fill.good {
+            background: linear-gradient(90deg, #8bc34a, #aed581);
+        }
+
+        .satisfaction-bar-fill.average {
+            background: linear-gradient(90deg, #ffc107, #ffca28);
+        }
+
+        .satisfaction-bar-fill.poor {
+            background: linear-gradient(90deg, #ff9800, #ffb74d);
+        }
+
+        .satisfaction-bar-fill.bad {
+            background: linear-gradient(90deg, #f44336, #e57373);
+        }
+
+        .threshold-warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 0 4px 4px 0;
+            color: #e65100;
+            font-size: 13px;
+        }
+
+        .threshold-failure {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 0 4px 4px 0;
+            color: #c62828;
+            font-size: 13px;
+        }
+
+        [data-theme="dark"] .threshold-warning {
+            background: #3d2e00;
+            color: #ffb74d;
+        }
+
+        [data-theme="dark"] .threshold-failure {
+            background: #3d0000;
+            color: #ef9a9a;
+        }
+
+        .satisfaction-comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .satisfaction-comparison-table th,
+        .satisfaction-comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .satisfaction-comparison-table th {
+            background: var(--table-header-bg);
+            color: var(--button-primary);
+            font-weight: 600;
+        }
+
+        .satisfaction-comparison-table th:first-child,
+        .satisfaction-comparison-table td:first-child {
+            text-align: left;
+        }
+
+        .satisfaction-comparison-table tr:hover {
+            background: var(--table-hover);
+        }
+
+        .satisfaction-winner {
+            background: var(--highlight-bg) !important;
+        }
+
+        .score-check {
+            color: #4caf50;
+        }
+
+        .score-warning {
+            color: #ff9800;
+        }
+
+        .score-fail {
+            color: #f44336;
+        }
+
+        .toggle-scale {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-scale label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: 0.4s;
+            border-radius: 26px;
+        }
+
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: var(--button-primary);
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .factor-score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .factor-score-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: var(--table-header-bg);
+            border-radius: 6px;
+        }
+
+        .factor-score-item label {
+            flex: 1;
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+
+        .factor-score-item .score-input {
+            width: 50px;
+            padding: 4px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .factor-status {
+            font-size: 14px;
+        }
+
+        .economic-integration-note {
+            background: var(--highlight-bg);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .salary-expectations {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .salary-expectations .form-group {
+            margin-bottom: 0;
+        }
+
+        .salary-expectations input {
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .satisfaction-tabs {
+                flex-direction: column;
+            }
+
+            .satisfaction-tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .satisfaction-tab.active {
+                border-left-color: var(--button-primary);
+                border-bottom-color: transparent;
+            }
+
+            .weight-config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .salary-expectations {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -645,6 +1075,233 @@
                 <ul id="chartLegendList">
                     <!-- Will be populated dynamically -->
                 </ul>
+            </div>
+        </div>
+
+        <!-- Job Satisfaction Theorem Calculator Section -->
+        <div id="satisfactionSection" class="satisfaction-section" style="display: none;">
+            <h2 id="satisfaction-title">🎯 Job Satisfaction Analysis</h2>
+            
+            <!-- Mathematical Formula Display -->
+            <div class="satisfaction-theorem">
+                <div id="satisfaction-formula-label">Job Satisfaction Theorem</div>
+                <div class="formula">S = [ Σᵢ αᵢ · f(ρᵢ) / Σᵢ αᵢ · f(10) ] × 100</div>
+                <div id="satisfaction-formula-description" style="font-size: 0.85em; margin-top: 5px;">
+                    subject to: ρᵢ ≥ θᵢ for critical factors
+                </div>
+            </div>
+
+            <!-- Tabs for different views -->
+            <div class="satisfaction-tabs">
+                <button class="satisfaction-tab active" onclick="switchSatisfactionTab('weights')" id="tab-weights">
+                    ⚖️ <span id="tab-weights-text">Your Priorities</span>
+                </button>
+                <button class="satisfaction-tab" onclick="switchSatisfactionTab('scoring')" id="tab-scoring">
+                    📝 <span id="tab-scoring-text">Score Offers</span>
+                </button>
+                <button class="satisfaction-tab" onclick="switchSatisfactionTab('comparison')" id="tab-comparison">
+                    📊 <span id="tab-comparison-text">Comparison</span>
+                </button>
+            </div>
+
+            <!-- Tab Content: Weight Configuration -->
+            <div id="satisfaction-weights" class="satisfaction-tab-content active">
+                <div class="toggle-scale">
+                    <label id="scale-mode-label">Scale Mode:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="useLogarithmicScale" onchange="updateSatisfactionPreferences()">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="scale-mode-text" style="color: var(--text-secondary);">Linear</span>
+                    <span class="help-text" id="scale-mode-help" style="margin-left: 10px;">(Logarithmic captures diminishing returns)</span>
+                </div>
+
+                <h3 id="weights-title" style="color: var(--text-primary); margin-bottom: 15px;">🎚️ Set Your Factor Weights (0-10)</h3>
+                <p id="weights-description" style="color: var(--text-secondary); margin-bottom: 15px; font-size: 14px;">
+                    Adjust weights based on what matters most to you. Higher weight = more important factor.
+                </p>
+
+                <div class="weight-config-grid">
+                    <!-- Financial Category -->
+                    <div class="weight-category">
+                        <h4>💰 <span id="cat-financial">Financial</span></h4>
+                        <div class="weight-item">
+                            <label id="label-economic">Economic/Compensation</label>
+                            <input type="range" class="weight-slider" id="weight-economic" min="0" max="10" value="8" onchange="updateWeightDisplay('economic')">
+                            <span class="weight-value" id="weight-economic-value">8</span>
+                            <span class="threshold-label" id="threshold-label-economic">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-economic" min="0" max="10" value="5" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+
+                    <!-- Growth Category -->
+                    <div class="weight-category">
+                        <h4>📈 <span id="cat-growth">Growth</span></h4>
+                        <div class="weight-item">
+                            <label id="label-professionalGrowth">Professional Development</label>
+                            <input type="range" class="weight-slider" id="weight-professionalGrowth" min="0" max="10" value="9" onchange="updateWeightDisplay('professionalGrowth')">
+                            <span class="weight-value" id="weight-professionalGrowth-value">9</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-professionalGrowth" min="0" max="10" value="4" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-intellectualGrowth">Intellectual Development</label>
+                            <input type="range" class="weight-slider" id="weight-intellectualGrowth" min="0" max="10" value="8" onchange="updateWeightDisplay('intellectualGrowth')">
+                            <span class="weight-value" id="weight-intellectualGrowth-value">8</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-intellectualGrowth" min="0" max="10" value="3" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-optionality">Optionality</label>
+                            <input type="range" class="weight-slider" id="weight-optionality" min="0" max="10" value="9" onchange="updateWeightDisplay('optionality')">
+                            <span class="weight-value" id="weight-optionality-value">9</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-optionality" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+
+                    <!-- Social Category -->
+                    <div class="weight-category">
+                        <h4>👥 <span id="cat-social">Social</span></h4>
+                        <div class="weight-item">
+                            <label id="label-teamSocialAffinity">Team Social Affinity</label>
+                            <input type="range" class="weight-slider" id="weight-teamSocialAffinity" min="0" max="10" value="6" onchange="updateWeightDisplay('teamSocialAffinity')">
+                            <span class="weight-value" id="weight-teamSocialAffinity-value">6</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-teamSocialAffinity" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-teamProfessionalAffinity">Team Professional Affinity</label>
+                            <input type="range" class="weight-slider" id="weight-teamProfessionalAffinity" min="0" max="10" value="7" onchange="updateWeightDisplay('teamProfessionalAffinity')">
+                            <span class="weight-value" id="weight-teamProfessionalAffinity-value">7</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-teamProfessionalAffinity" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-belonging">Sense of Belonging</label>
+                            <input type="range" class="weight-slider" id="weight-belonging" min="0" max="10" value="4" onchange="updateWeightDisplay('belonging')">
+                            <span class="weight-value" id="weight-belonging-value">4</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-belonging" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+
+                    <!-- Recognition Category -->
+                    <div class="weight-category">
+                        <h4>🏆 <span id="cat-recognition">Recognition</span></h4>
+                        <div class="weight-item">
+                            <label id="label-recognition">Recognition</label>
+                            <input type="range" class="weight-slider" id="weight-recognition" min="0" max="10" value="5" onchange="updateWeightDisplay('recognition')">
+                            <span class="weight-value" id="weight-recognition-value">5</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-recognition" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-importance">Sense of Importance</label>
+                            <input type="range" class="weight-slider" id="weight-importance" min="0" max="10" value="5" onchange="updateWeightDisplay('importance')">
+                            <span class="weight-value" id="weight-importance-value">5</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-importance" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+
+                    <!-- Purpose Category -->
+                    <div class="weight-category">
+                        <h4>🎯 <span id="cat-purpose">Purpose</span></h4>
+                        <div class="weight-item">
+                            <label id="label-shortTermFulfillment">Short-term Fulfillment</label>
+                            <input type="range" class="weight-slider" id="weight-shortTermFulfillment" min="0" max="10" value="6" onchange="updateWeightDisplay('shortTermFulfillment')">
+                            <span class="weight-value" id="weight-shortTermFulfillment-value">6</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-shortTermFulfillment" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-longTermFulfillment">Long-term Fulfillment</label>
+                            <input type="range" class="weight-slider" id="weight-longTermFulfillment" min="0" max="10" value="9" onchange="updateWeightDisplay('longTermFulfillment')">
+                            <span class="weight-value" id="weight-longTermFulfillment-value">9</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-longTermFulfillment" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-worldImpact">Making the World Better</label>
+                            <input type="range" class="weight-slider" id="weight-worldImpact" min="0" max="10" value="6" onchange="updateWeightDisplay('worldImpact')">
+                            <span class="weight-value" id="weight-worldImpact-value">6</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-worldImpact" min="0" max="10" value="0" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-valuesAlignment">Values Alignment</label>
+                            <input type="range" class="weight-slider" id="weight-valuesAlignment" min="0" max="10" value="6" onchange="updateWeightDisplay('valuesAlignment')">
+                            <span class="weight-value" id="weight-valuesAlignment-value">6</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-valuesAlignment" min="0" max="10" value="2" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+
+                    <!-- Lifestyle Category -->
+                    <div class="weight-category">
+                        <h4>⚖️ <span id="cat-lifestyle">Lifestyle</span></h4>
+                        <div class="weight-item">
+                            <label id="label-autonomy">Autonomy</label>
+                            <input type="range" class="weight-slider" id="weight-autonomy" min="0" max="10" value="7" onchange="updateWeightDisplay('autonomy')">
+                            <span class="weight-value" id="weight-autonomy-value">7</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-autonomy" min="0" max="10" value="2" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-stability">Stability/Security</label>
+                            <input type="range" class="weight-slider" id="weight-stability" min="0" max="10" value="5" onchange="updateWeightDisplay('stability')">
+                            <span class="weight-value" id="weight-stability-value">5</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-stability" min="0" max="10" value="3" onchange="updateSatisfactionPreferences()">
+                        </div>
+                        <div class="weight-item">
+                            <label id="label-workLifeBalance">Work-Life Balance</label>
+                            <input type="range" class="weight-slider" id="weight-workLifeBalance" min="0" max="10" value="7" onchange="updateWeightDisplay('workLifeBalance')">
+                            <span class="weight-value" id="weight-workLifeBalance-value">7</span>
+                            <span class="threshold-label">Min:</span>
+                            <input type="number" class="threshold-input" id="threshold-workLifeBalance" min="0" max="10" value="4" onchange="updateSatisfactionPreferences()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Factor Integration -->
+                <div class="economic-integration-note" id="economic-note">
+                    <strong>💡 Economic Factor Integration:</strong> Set your salary expectations below to auto-calculate the Economic score from your compensation data.
+                </div>
+                <div class="salary-expectations">
+                    <div class="form-group">
+                        <label id="label-salary-min">Minimum Acceptable ($)</label>
+                        <input type="number" id="salary-expectation-min" placeholder="50000" min="0" onchange="updateSatisfactionPreferences()">
+                    </div>
+                    <div class="form-group">
+                        <label id="label-salary-target">Target Salary ($)</label>
+                        <input type="number" id="salary-expectation-target" placeholder="80000" min="0" onchange="updateSatisfactionPreferences()">
+                    </div>
+                    <div class="form-group">
+                        <label id="label-salary-stretch">Stretch Goal ($)</label>
+                        <input type="number" id="salary-expectation-stretch" placeholder="120000" min="0" onchange="updateSatisfactionPreferences()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Score Offers -->
+            <div id="satisfaction-scoring" class="satisfaction-tab-content">
+                <h3 id="scoring-title" style="color: var(--text-primary); margin-bottom: 15px;">📝 Score Each Offer (0-10)</h3>
+                <p id="scoring-description" style="color: var(--text-secondary); margin-bottom: 15px; font-size: 14px;">
+                    Rate each job offer across all satisfaction factors. Economic score can be auto-calculated from compensation.
+                </p>
+                <div id="offer-scoring-container">
+                    <!-- Dynamically populated based on offers -->
+                </div>
+            </div>
+
+            <!-- Tab Content: Comparison -->
+            <div id="satisfaction-comparison" class="satisfaction-tab-content">
+                <h3 id="comparison-title" style="color: var(--text-primary); margin-bottom: 15px;">📊 Satisfaction Comparison</h3>
+                <div id="satisfaction-comparison-container">
+                    <!-- Dynamically populated -->
+                </div>
             </div>
         </div>
 
@@ -814,7 +1471,60 @@
                 majorHealth: 'Major Health',
                 minorHealth: 'Minor Health',
                 none: 'None',
-                best: 'BEST'
+                best: 'BEST',
+                // Satisfaction Analysis translations
+                satisfactionTitle: '🎯 Job Satisfaction Analysis',
+                satisfactionFormulaLabel: 'Job Satisfaction Theorem',
+                satisfactionFormulaDesc: 'subject to: ρᵢ ≥ θᵢ for critical factors',
+                tabWeights: 'Your Priorities',
+                tabScoring: 'Score Offers',
+                tabComparison: 'Comparison',
+                scaleModeLabel: 'Scale Mode:',
+                scaleModeLinear: 'Linear',
+                scaleModeLogarithmic: 'Logarithmic',
+                scaleModeHelp: '(Logarithmic captures diminishing returns)',
+                weightsTitle: '🎚️ Set Your Factor Weights (0-10)',
+                weightsDescription: 'Adjust weights based on what matters most to you. Higher weight = more important factor.',
+                catFinancial: 'Financial',
+                catGrowth: 'Growth',
+                catSocial: 'Social',
+                catRecognition: 'Recognition',
+                catPurpose: 'Purpose',
+                catLifestyle: 'Lifestyle',
+                factorEconomic: 'Economic/Compensation',
+                factorProfessionalGrowth: 'Professional Development',
+                factorIntellectualGrowth: 'Intellectual Development',
+                factorOptionality: 'Optionality',
+                factorTeamSocialAffinity: 'Team Social Affinity',
+                factorTeamProfessionalAffinity: 'Team Professional Affinity',
+                factorBelonging: 'Sense of Belonging',
+                factorRecognition: 'Recognition',
+                factorImportance: 'Sense of Importance',
+                factorShortTermFulfillment: 'Short-term Fulfillment',
+                factorLongTermFulfillment: 'Long-term Fulfillment',
+                factorWorldImpact: 'Making the World Better',
+                factorValuesAlignment: 'Values Alignment',
+                factorAutonomy: 'Autonomy',
+                factorStability: 'Stability/Security',
+                factorWorkLifeBalance: 'Work-Life Balance',
+                minThreshold: 'Min:',
+                economicNote: '💡 Economic Factor Integration: Set your salary expectations below to auto-calculate the Economic score from your compensation data.',
+                salaryMin: 'Minimum Acceptable ($)',
+                salaryTarget: 'Target Salary ($)',
+                salaryStretch: 'Stretch Goal ($)',
+                scoringTitle: '📝 Score Each Offer (0-10)',
+                scoringDescription: 'Rate each job offer across all satisfaction factors. Economic score can be auto-calculated from compensation.',
+                comparisonTitle: '📊 Satisfaction Comparison',
+                autoCalculateEconomic: 'Auto-calculate from compensation',
+                satisfactionScore: 'Satisfaction Score',
+                thresholdFailures: 'Threshold Failures',
+                noFailures: 'No threshold failures',
+                winner: 'WINNER',
+                satisfactionWinner: 'Winner:',
+                pointsAhead: 'points ahead',
+                offerFailsThreshold: 'fails threshold in:',
+                noOffers: 'Add job offers to see satisfaction comparison',
+                calculateSatisfaction: 'Calculate Satisfaction'
             },
             es: {
                 headerTitle: '💼 Calculadora de Compensación Total',
@@ -957,7 +1667,60 @@
                 majorHealth: 'Salud Mayor',
                 minorHealth: 'Salud Menor',
                 none: 'Ninguno',
-                best: 'MEJOR'
+                best: 'MEJOR',
+                // Satisfaction Analysis translations
+                satisfactionTitle: '🎯 Análisis de Satisfacción Laboral',
+                satisfactionFormulaLabel: 'Teorema de Satisfacción Laboral',
+                satisfactionFormulaDesc: 'sujeto a: ρᵢ ≥ θᵢ para factores críticos',
+                tabWeights: 'Tus Prioridades',
+                tabScoring: 'Calificar Ofertas',
+                tabComparison: 'Comparación',
+                scaleModeLabel: 'Modo de Escala:',
+                scaleModeLinear: 'Lineal',
+                scaleModeLogarithmic: 'Logarítmico',
+                scaleModeHelp: '(Logarítmico captura rendimientos decrecientes)',
+                weightsTitle: '🎚️ Configura tus Pesos de Factores (0-10)',
+                weightsDescription: 'Ajusta los pesos según lo que más te importa. Mayor peso = factor más importante.',
+                catFinancial: 'Financiero',
+                catGrowth: 'Crecimiento',
+                catSocial: 'Social',
+                catRecognition: 'Reconocimiento',
+                catPurpose: 'Propósito',
+                catLifestyle: 'Estilo de Vida',
+                factorEconomic: 'Económico/Compensación',
+                factorProfessionalGrowth: 'Desarrollo Profesional',
+                factorIntellectualGrowth: 'Desarrollo Intelectual',
+                factorOptionality: 'Opcionalidad',
+                factorTeamSocialAffinity: 'Afinidad Social del Equipo',
+                factorTeamProfessionalAffinity: 'Afinidad Profesional del Equipo',
+                factorBelonging: 'Sentido de Pertenencia',
+                factorRecognition: 'Reconocimiento',
+                factorImportance: 'Sentido de Importancia',
+                factorShortTermFulfillment: 'Realización a Corto Plazo',
+                factorLongTermFulfillment: 'Realización a Largo Plazo',
+                factorWorldImpact: 'Hacer el Mundo Mejor',
+                factorValuesAlignment: 'Alineación de Valores',
+                factorAutonomy: 'Autonomía',
+                factorStability: 'Estabilidad/Seguridad',
+                factorWorkLifeBalance: 'Balance Vida-Trabajo',
+                minThreshold: 'Mín:',
+                economicNote: '💡 Integración de Factor Económico: Configura tus expectativas salariales abajo para auto-calcular el puntaje Económico desde tus datos de compensación.',
+                salaryMin: 'Mínimo Aceptable ($)',
+                salaryTarget: 'Salario Objetivo ($)',
+                salaryStretch: 'Meta Aspiracional ($)',
+                scoringTitle: '📝 Califica Cada Oferta (0-10)',
+                scoringDescription: 'Califica cada oferta de trabajo en todos los factores de satisfacción. El puntaje económico puede auto-calcularse desde la compensación.',
+                comparisonTitle: '📊 Comparación de Satisfacción',
+                autoCalculateEconomic: 'Auto-calcular desde compensación',
+                satisfactionScore: 'Puntaje de Satisfacción',
+                thresholdFailures: 'Fallos de Umbral',
+                noFailures: 'Sin fallos de umbral',
+                winner: 'GANADOR',
+                satisfactionWinner: 'Ganador:',
+                pointsAhead: 'puntos adelante',
+                offerFailsThreshold: 'falla umbral en:',
+                noOffers: 'Agrega ofertas de trabajo para ver la comparación de satisfacción',
+                calculateSatisfaction: 'Calcular Satisfacción'
             }
         };
 
@@ -1041,6 +1804,9 @@
             if (Object.keys(offers).length > 0) {
                 updateComparison();
             }
+            
+            // Update satisfaction section translations
+            updateSatisfactionTranslations();
         }
 
         function updateOfferCardTranslations(offerId) {
@@ -2282,6 +3048,9 @@
             
             // Update chart if there are offers
             updateChart();
+            
+            // Update satisfaction section
+            updateSatisfactionSection();
         }
 
         // Chart variables
@@ -2714,9 +3483,702 @@
             });
         }
 
+        // ========================================
+        // Job Satisfaction Theorem Calculator
+        // ========================================
+
+        // Satisfaction factors list
+        const satisfactionFactors = [
+            'economic', 'professionalGrowth', 'intellectualGrowth', 'optionality',
+            'teamSocialAffinity', 'teamProfessionalAffinity', 'belonging',
+            'recognition', 'importance', 'shortTermFulfillment', 'longTermFulfillment',
+            'worldImpact', 'valuesAlignment', 'autonomy', 'stability', 'workLifeBalance'
+        ];
+
+        // Default satisfaction preferences
+        let satisfactionPreferences = {
+            weights: {
+                economic: 8,
+                professionalGrowth: 9,
+                intellectualGrowth: 8,
+                optionality: 9,
+                teamSocialAffinity: 6,
+                teamProfessionalAffinity: 7,
+                belonging: 4,
+                recognition: 5,
+                importance: 5,
+                shortTermFulfillment: 6,
+                longTermFulfillment: 9,
+                worldImpact: 6,
+                valuesAlignment: 6,
+                autonomy: 7,
+                stability: 5,
+                workLifeBalance: 7
+            },
+            thresholds: {
+                economic: 5,
+                professionalGrowth: 4,
+                intellectualGrowth: 3,
+                optionality: 0,
+                teamSocialAffinity: 0,
+                teamProfessionalAffinity: 0,
+                belonging: 0,
+                recognition: 0,
+                importance: 0,
+                shortTermFulfillment: 0,
+                longTermFulfillment: 0,
+                worldImpact: 0,
+                valuesAlignment: 2,
+                autonomy: 2,
+                stability: 3,
+                workLifeBalance: 4
+            },
+            useLogarithmicScale: false,
+            salaryExpectations: {
+                minimum: 50000,
+                target: 80000,
+                stretch: 120000
+            }
+        };
+
+        // Offer satisfaction scores
+        let offerSatisfactionScores = {};
+
+        // Load satisfaction preferences from localStorage
+        function loadSatisfactionPreferences() {
+            const saved = localStorage.getItem('satisfactionPreferences');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    satisfactionPreferences = { ...satisfactionPreferences, ...parsed };
+                } catch (e) {
+                    console.error('Error loading satisfaction preferences:', e);
+                }
+            }
+            
+            const savedScores = localStorage.getItem('offerSatisfactionScores');
+            if (savedScores) {
+                try {
+                    offerSatisfactionScores = JSON.parse(savedScores);
+                } catch (e) {
+                    console.error('Error loading satisfaction scores:', e);
+                }
+            }
+        }
+
+        // Save satisfaction preferences to localStorage
+        function saveSatisfactionPreferences() {
+            localStorage.setItem('satisfactionPreferences', JSON.stringify(satisfactionPreferences));
+            localStorage.setItem('offerSatisfactionScores', JSON.stringify(offerSatisfactionScores));
+        }
+
+        // Initialize satisfaction UI with saved values
+        function initializeSatisfactionUI() {
+            loadSatisfactionPreferences();
+            
+            // Set weight sliders and values
+            satisfactionFactors.forEach(factor => {
+                const slider = document.getElementById(`weight-${factor}`);
+                const value = document.getElementById(`weight-${factor}-value`);
+                const threshold = document.getElementById(`threshold-${factor}`);
+                
+                if (slider && satisfactionPreferences.weights[factor] !== undefined) {
+                    slider.value = satisfactionPreferences.weights[factor];
+                }
+                if (value) {
+                    value.textContent = satisfactionPreferences.weights[factor] || 0;
+                }
+                if (threshold && satisfactionPreferences.thresholds[factor] !== undefined) {
+                    threshold.value = satisfactionPreferences.thresholds[factor];
+                }
+            });
+            
+            // Set logarithmic toggle
+            const logToggle = document.getElementById('useLogarithmicScale');
+            if (logToggle) {
+                logToggle.checked = satisfactionPreferences.useLogarithmicScale;
+                updateScaleModeText();
+            }
+            
+            // Set salary expectations
+            const minInput = document.getElementById('salary-expectation-min');
+            const targetInput = document.getElementById('salary-expectation-target');
+            const stretchInput = document.getElementById('salary-expectation-stretch');
+            
+            if (minInput && satisfactionPreferences.salaryExpectations) {
+                minInput.value = satisfactionPreferences.salaryExpectations.minimum || '';
+            }
+            if (targetInput && satisfactionPreferences.salaryExpectations) {
+                targetInput.value = satisfactionPreferences.salaryExpectations.target || '';
+            }
+            if (stretchInput && satisfactionPreferences.salaryExpectations) {
+                stretchInput.value = satisfactionPreferences.salaryExpectations.stretch || '';
+            }
+        }
+
+        // Update weight display when slider changes
+        function updateWeightDisplay(factor) {
+            const slider = document.getElementById(`weight-${factor}`);
+            const value = document.getElementById(`weight-${factor}-value`);
+            
+            if (slider && value) {
+                value.textContent = slider.value;
+                satisfactionPreferences.weights[factor] = parseInt(slider.value);
+                saveSatisfactionPreferences();
+                updateSatisfactionComparison();
+            }
+        }
+
+        // Update scale mode text
+        function updateScaleModeText() {
+            const toggle = document.getElementById('useLogarithmicScale');
+            const text = document.getElementById('scale-mode-text');
+            if (toggle && text) {
+                text.textContent = toggle.checked ? t('scaleModeLogarithmic') : t('scaleModeLinear');
+            }
+        }
+
+        // Update satisfaction preferences from UI
+        function updateSatisfactionPreferences() {
+            // Update weights
+            satisfactionFactors.forEach(factor => {
+                const slider = document.getElementById(`weight-${factor}`);
+                const threshold = document.getElementById(`threshold-${factor}`);
+                
+                if (slider) {
+                    satisfactionPreferences.weights[factor] = parseInt(slider.value);
+                }
+                if (threshold) {
+                    satisfactionPreferences.thresholds[factor] = parseInt(threshold.value) || 0;
+                }
+            });
+            
+            // Update logarithmic scale
+            const logToggle = document.getElementById('useLogarithmicScale');
+            if (logToggle) {
+                satisfactionPreferences.useLogarithmicScale = logToggle.checked;
+                updateScaleModeText();
+            }
+            
+            // Update salary expectations
+            const minInput = document.getElementById('salary-expectation-min');
+            const targetInput = document.getElementById('salary-expectation-target');
+            const stretchInput = document.getElementById('salary-expectation-stretch');
+            
+            satisfactionPreferences.salaryExpectations = {
+                minimum: parseFloat(minInput?.value) || 50000,
+                target: parseFloat(targetInput?.value) || 80000,
+                stretch: parseFloat(stretchInput?.value) || 120000
+            };
+            
+            saveSatisfactionPreferences();
+            updateOfferScoringUI();
+            updateSatisfactionComparison();
+        }
+
+        // Switch between satisfaction tabs
+        function switchSatisfactionTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.satisfaction-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.satisfaction-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const content = document.getElementById(`satisfaction-${tabName}`);
+            if (content) {
+                content.classList.add('active');
+            }
+            
+            // Activate selected tab
+            const tab = document.getElementById(`tab-${tabName}`);
+            if (tab) {
+                tab.classList.add('active');
+            }
+            
+            // Update content based on tab
+            if (tabName === 'scoring') {
+                updateOfferScoringUI();
+            } else if (tabName === 'comparison') {
+                updateSatisfactionComparison();
+            }
+        }
+
+        // Calculate economic score from compensation
+        function calculateEconomicScore(compensation) {
+            const { minimum, target, stretch } = satisfactionPreferences.salaryExpectations;
+            const yearOneTotal = compensation || 0;
+            
+            if (yearOneTotal <= minimum) return 0;
+            if (yearOneTotal >= stretch) return 10;
+            
+            if (yearOneTotal <= target) {
+                // Linear from 0-7 between minimum and target
+                return 7 * (yearOneTotal - minimum) / (target - minimum);
+            } else {
+                // Linear from 7-10 between target and stretch
+                return 7 + 3 * (yearOneTotal - target) / (stretch - target);
+            }
+        }
+
+        // Transformation function for satisfaction calculation
+        function transformScore(x, useLog) {
+            if (useLog) {
+                return Math.log(x + 1);
+            }
+            return x;
+        }
+
+        // Calculate satisfaction score for an offer
+        function calculateSatisfaction(scores) {
+            const weights = satisfactionPreferences.weights;
+            const thresholds = satisfactionPreferences.thresholds;
+            const useLog = satisfactionPreferences.useLogarithmicScale;
+            
+            let totalScore = 0;
+            let maxPossible = 0;
+            const failures = [];
+            
+            for (const factor of satisfactionFactors) {
+                const weight = weights[factor] || 0;
+                const threshold = thresholds[factor] || 0;
+                const score = scores[factor] || 0;
+                
+                maxPossible += weight * transformScore(10, useLog);
+                
+                // Check threshold
+                if (score < threshold && threshold > 0) {
+                    failures.push({
+                        factor,
+                        score,
+                        threshold,
+                        deficit: threshold - score
+                    });
+                }
+                
+                totalScore += weight * transformScore(score, useLog);
+            }
+            
+            // Normalize to 0-100 scale
+            const normalizedScore = maxPossible > 0 ? (totalScore / maxPossible) * 100 : 0;
+            
+            return {
+                score: normalizedScore,
+                rawScore: totalScore,
+                maxPossible,
+                failures,
+                hasFailures: failures.length > 0
+            };
+        }
+
+        // Get satisfaction bar class based on score
+        function getSatisfactionBarClass(score) {
+            if (score >= 80) return 'excellent';
+            if (score >= 65) return 'good';
+            if (score >= 50) return 'average';
+            if (score >= 35) return 'poor';
+            return 'bad';
+        }
+
+        // Get factor label for display
+        function getFactorLabel(factor) {
+            const labelMap = {
+                economic: 'factorEconomic',
+                professionalGrowth: 'factorProfessionalGrowth',
+                intellectualGrowth: 'factorIntellectualGrowth',
+                optionality: 'factorOptionality',
+                teamSocialAffinity: 'factorTeamSocialAffinity',
+                teamProfessionalAffinity: 'factorTeamProfessionalAffinity',
+                belonging: 'factorBelonging',
+                recognition: 'factorRecognition',
+                importance: 'factorImportance',
+                shortTermFulfillment: 'factorShortTermFulfillment',
+                longTermFulfillment: 'factorLongTermFulfillment',
+                worldImpact: 'factorWorldImpact',
+                valuesAlignment: 'factorValuesAlignment',
+                autonomy: 'factorAutonomy',
+                stability: 'factorStability',
+                workLifeBalance: 'factorWorkLifeBalance'
+            };
+            return t(labelMap[factor]) || factor;
+        }
+
+        // Update offer scoring UI
+        function updateOfferScoringUI() {
+            const container = document.getElementById('offer-scoring-container');
+            if (!container) return;
+            
+            const offerKeys = Object.keys(offers);
+            
+            if (offerKeys.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-secondary); text-align: center;">${t('noOffers')}</p>`;
+                return;
+            }
+            
+            let html = '';
+            
+            offerKeys.forEach(offerId => {
+                const offer = offers[offerId];
+                const scores = offerSatisfactionScores[offerId] || {};
+                
+                // Auto-calculate economic score if checkbox is checked
+                const autoCalcId = `${offerId}-auto-economic`;
+                const isAutoCalc = scores.autoCalculateEconomic !== false;
+                
+                let economicScore = scores.economic || 0;
+                if (isAutoCalc && offer.firstYearTotal) {
+                    economicScore = calculateEconomicScore(offer.firstYearTotal);
+                }
+                
+                html += `
+                    <div class="offer-card" style="margin-bottom: 20px;">
+                        <h3 style="color: var(--button-primary); margin-bottom: 15px;">
+                            🏢 ${offer.company} - ${offer.position}
+                        </h3>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: flex; align-items: center; gap: 8px; color: var(--text-primary);">
+                                <input type="checkbox" id="${autoCalcId}" 
+                                       ${isAutoCalc ? 'checked' : ''} 
+                                       onchange="toggleAutoEconomic('${offerId}')"
+                                       style="width: auto;">
+                                <span>${t('autoCalculateEconomic')}</span>
+                                <span style="color: var(--button-primary); font-weight: bold;">
+                                    (${economicScore.toFixed(1)}/10)
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="factor-score-grid">
+                            ${satisfactionFactors.map(factor => {
+                                const isEconomic = factor === 'economic';
+                                const currentScore = isEconomic && isAutoCalc ? economicScore : (scores[factor] || 0);
+                                const threshold = satisfactionPreferences.thresholds[factor] || 0;
+                                const isBelowThreshold = currentScore < threshold && threshold > 0;
+                                
+                                return `
+                                    <div class="factor-score-item" style="${isBelowThreshold ? 'border: 2px solid #f44336;' : ''}">
+                                        <label>${getFactorLabel(factor)}</label>
+                                        <input type="number" class="score-input" 
+                                               id="${offerId}-score-${factor}"
+                                               min="0" max="10" step="0.5"
+                                               value="${currentScore.toFixed(1)}"
+                                               ${isEconomic && isAutoCalc ? 'disabled' : ''}
+                                               onchange="updateFactorScore('${offerId}', '${factor}')">
+                                        <span class="factor-status">
+                                            ${isBelowThreshold ? 
+                                                `<span class="score-fail">⚠️</span>` : 
+                                                (currentScore >= threshold ? `<span class="score-check">✓</span>` : '')}
+                                        </span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        
+                        ${(() => {
+                            const currentScores = {};
+                            satisfactionFactors.forEach(factor => {
+                                if (factor === 'economic' && isAutoCalc) {
+                                    currentScores[factor] = economicScore;
+                                } else {
+                                    currentScores[factor] = scores[factor] || 0;
+                                }
+                            });
+                            const result = calculateSatisfaction(currentScores);
+                            
+                            return `
+                                <div class="satisfaction-score-display">
+                                    <div class="score-label">${t('satisfactionScore')}</div>
+                                    <div class="score">${result.score.toFixed(1)} / 100</div>
+                                    <div class="satisfaction-bar" style="margin-top: 10px;">
+                                        <div class="satisfaction-bar-fill ${getSatisfactionBarClass(result.score)}" 
+                                             style="width: ${result.score}%;"></div>
+                                    </div>
+                                </div>
+                                ${result.hasFailures ? `
+                                    <div class="threshold-failure">
+                                        <strong>⚠️ ${t('thresholdFailures')}:</strong> 
+                                        ${result.failures.map(f => 
+                                            `${getFactorLabel(f.factor)} (${f.score.toFixed(1)} < ${f.threshold})`
+                                        ).join(', ')}
+                                    </div>
+                                ` : ''}
+                            `;
+                        })()}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Toggle auto-calculate economic score
+        function toggleAutoEconomic(offerId) {
+            const checkbox = document.getElementById(`${offerId}-auto-economic`);
+            if (!offerSatisfactionScores[offerId]) {
+                offerSatisfactionScores[offerId] = {};
+            }
+            offerSatisfactionScores[offerId].autoCalculateEconomic = checkbox?.checked !== false;
+            saveSatisfactionPreferences();
+            updateOfferScoringUI();
+            updateSatisfactionComparison();
+        }
+
+        // Update factor score for an offer
+        function updateFactorScore(offerId, factor) {
+            const input = document.getElementById(`${offerId}-score-${factor}`);
+            if (!input) return;
+            
+            if (!offerSatisfactionScores[offerId]) {
+                offerSatisfactionScores[offerId] = {};
+            }
+            
+            offerSatisfactionScores[offerId][factor] = parseFloat(input.value) || 0;
+            saveSatisfactionPreferences();
+            updateOfferScoringUI();
+            updateSatisfactionComparison();
+        }
+
+        // Update satisfaction comparison view
+        function updateSatisfactionComparison() {
+            const container = document.getElementById('satisfaction-comparison-container');
+            if (!container) return;
+            
+            const offerKeys = Object.keys(offers);
+            
+            if (offerKeys.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-secondary); text-align: center;">${t('noOffers')}</p>`;
+                return;
+            }
+            
+            // Calculate satisfaction for all offers
+            const results = offerKeys.map(offerId => {
+                const offer = offers[offerId];
+                const scores = offerSatisfactionScores[offerId] || {};
+                const isAutoCalc = scores.autoCalculateEconomic !== false;
+                
+                const currentScores = {};
+                satisfactionFactors.forEach(factor => {
+                    if (factor === 'economic' && isAutoCalc) {
+                        currentScores[factor] = calculateEconomicScore(offer.firstYearTotal);
+                    } else {
+                        currentScores[factor] = scores[factor] || 0;
+                    }
+                });
+                
+                return {
+                    offerId,
+                    offer,
+                    scores: currentScores,
+                    satisfaction: calculateSatisfaction(currentScores)
+                };
+            });
+            
+            // Sort by score
+            results.sort((a, b) => b.satisfaction.score - a.satisfaction.score);
+            
+            const winner = results[0];
+            const runnerUp = results[1];
+            const margin = runnerUp ? winner.satisfaction.score - runnerUp.satisfaction.score : 0;
+            
+            let html = `
+                <!-- Visual bar comparison -->
+                <div style="margin-bottom: 30px;">
+                    ${results.map((r, idx) => {
+                        const isWinner = idx === 0;
+                        return `
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                    <span style="color: var(--text-primary); font-weight: ${isWinner ? 'bold' : 'normal'};">
+                                        ${r.offer.company}
+                                        ${isWinner ? `<span class="winner-badge">${t('winner')}</span>` : ''}
+                                        ${r.satisfaction.hasFailures ? `<span class="score-fail">⚠️</span>` : ''}
+                                    </span>
+                                    <span style="color: var(--button-primary); font-weight: bold;">
+                                        ${r.satisfaction.score.toFixed(1)} / 100
+                                    </span>
+                                </div>
+                                <div class="satisfaction-bar">
+                                    <div class="satisfaction-bar-fill ${getSatisfactionBarClass(r.satisfaction.score)}" 
+                                         style="width: ${r.satisfaction.score}%;"></div>
+                                </div>
+                                ${r.satisfaction.hasFailures ? `
+                                    <div style="font-size: 12px; color: #f44336; margin-top: 3px;">
+                                        ${r.offer.company} ${t('offerFailsThreshold')} ${r.satisfaction.failures.map(f => getFactorLabel(f.factor)).join(', ')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                
+                <!-- Winner summary -->
+                <div style="background: var(--highlight-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <strong>${t('satisfactionWinner')}</strong> ${winner.offer.company}
+                    ${runnerUp ? `(+${margin.toFixed(1)} ${t('pointsAhead')})` : ''}
+                </div>
+                
+                <!-- Detailed comparison table -->
+                <table class="satisfaction-comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            ${results.map(r => `<th>${r.offer.company}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${satisfactionFactors.map(factor => {
+                            const scores = results.map(r => r.scores[factor] || 0);
+                            const maxScore = Math.max(...scores);
+                            const threshold = satisfactionPreferences.thresholds[factor] || 0;
+                            
+                            return `
+                                <tr>
+                                    <td>${getFactorLabel(factor)}</td>
+                                    ${results.map((r, idx) => {
+                                        const score = r.scores[factor] || 0;
+                                        const isBest = score === maxScore && score > 0;
+                                        const isBelowThreshold = score < threshold && threshold > 0;
+                                        
+                                        return `
+                                            <td class="${isBest ? 'satisfaction-winner' : ''}" 
+                                                style="${isBelowThreshold ? 'color: #f44336;' : ''}">
+                                                ${score.toFixed(1)}
+                                                ${isBest ? `<span class="winner-badge">${t('best')}</span>` : ''}
+                                                ${isBelowThreshold ? '<span class="score-fail">⚠️</span>' : ''}
+                                            </td>
+                                        `;
+                                    }).join('')}
+                                </tr>
+                            `;
+                        }).join('')}
+                        <tr style="font-weight: bold; background: var(--table-header-bg);">
+                            <td>${t('satisfactionScore')}</td>
+                            ${results.map((r, idx) => `
+                                <td class="${idx === 0 ? 'satisfaction-winner' : ''}">
+                                    ${r.satisfaction.score.toFixed(1)}
+                                    ${idx === 0 ? `<span class="winner-badge">${t('winner')}</span>` : ''}
+                                </td>
+                            `).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Update satisfaction section visibility
+        function updateSatisfactionSection() {
+            const section = document.getElementById('satisfactionSection');
+            const offerKeys = Object.keys(offers);
+            
+            if (section) {
+                section.style.display = offerKeys.length > 0 ? 'block' : 'none';
+            }
+            
+            updateOfferScoringUI();
+            updateSatisfactionComparison();
+        }
+
+        // Update satisfaction translations
+        function updateSatisfactionTranslations() {
+            // Update main title
+            const title = document.getElementById('satisfaction-title');
+            if (title) title.textContent = t('satisfactionTitle');
+            
+            // Update formula labels
+            const formulaLabel = document.getElementById('satisfaction-formula-label');
+            if (formulaLabel) formulaLabel.textContent = t('satisfactionFormulaLabel');
+            
+            const formulaDesc = document.getElementById('satisfaction-formula-description');
+            if (formulaDesc) formulaDesc.textContent = t('satisfactionFormulaDesc');
+            
+            // Update tabs
+            const tabWeightsText = document.getElementById('tab-weights-text');
+            if (tabWeightsText) tabWeightsText.textContent = t('tabWeights');
+            
+            const tabScoringText = document.getElementById('tab-scoring-text');
+            if (tabScoringText) tabScoringText.textContent = t('tabScoring');
+            
+            const tabComparisonText = document.getElementById('tab-comparison-text');
+            if (tabComparisonText) tabComparisonText.textContent = t('tabComparison');
+            
+            // Update scale mode
+            const scaleModeLabel = document.getElementById('scale-mode-label');
+            if (scaleModeLabel) scaleModeLabel.textContent = t('scaleModeLabel');
+            
+            const scaleModeHelp = document.getElementById('scale-mode-help');
+            if (scaleModeHelp) scaleModeHelp.textContent = t('scaleModeHelp');
+            
+            updateScaleModeText();
+            
+            // Update weights section
+            const weightsTitle = document.getElementById('weights-title');
+            if (weightsTitle) weightsTitle.textContent = t('weightsTitle');
+            
+            const weightsDesc = document.getElementById('weights-description');
+            if (weightsDesc) weightsDesc.textContent = t('weightsDescription');
+            
+            // Update category labels
+            const categories = {
+                'cat-financial': 'catFinancial',
+                'cat-growth': 'catGrowth',
+                'cat-social': 'catSocial',
+                'cat-recognition': 'catRecognition',
+                'cat-purpose': 'catPurpose',
+                'cat-lifestyle': 'catLifestyle'
+            };
+            
+            Object.entries(categories).forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = t(key);
+            });
+            
+            // Update factor labels
+            satisfactionFactors.forEach(factor => {
+                const label = document.getElementById(`label-${factor}`);
+                if (label) label.textContent = getFactorLabel(factor);
+            });
+            
+            // Update economic note
+            const economicNote = document.getElementById('economic-note');
+            if (economicNote) economicNote.innerHTML = `<strong>${t('economicNote').split(':')[0]}:</strong>${t('economicNote').split(':').slice(1).join(':')}`;
+            
+            // Update salary labels
+            const salaryMinLabel = document.getElementById('label-salary-min');
+            if (salaryMinLabel) salaryMinLabel.textContent = t('salaryMin');
+            
+            const salaryTargetLabel = document.getElementById('label-salary-target');
+            if (salaryTargetLabel) salaryTargetLabel.textContent = t('salaryTarget');
+            
+            const salaryStretchLabel = document.getElementById('label-salary-stretch');
+            if (salaryStretchLabel) salaryStretchLabel.textContent = t('salaryStretch');
+            
+            // Update scoring section
+            const scoringTitle = document.getElementById('scoring-title');
+            if (scoringTitle) scoringTitle.textContent = t('scoringTitle');
+            
+            const scoringDesc = document.getElementById('scoring-description');
+            if (scoringDesc) scoringDesc.textContent = t('scoringDescription');
+            
+            // Update comparison section
+            const comparisonTitle = document.getElementById('comparison-title');
+            if (comparisonTitle) comparisonTitle.textContent = t('comparisonTitle');
+            
+            // Refresh dynamic content
+            updateOfferScoringUI();
+            updateSatisfactionComparison();
+        }
+
         // Initialize with one offer
         window.onload = function() {
             initializePreferences();
+            initializeSatisfactionUI();
             addOffer();
         };
     </script>
