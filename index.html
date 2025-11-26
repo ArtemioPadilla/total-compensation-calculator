@@ -1019,6 +1019,15 @@
                     <span id="lang-icon">🌐</span>
                     <span id="lang-text">Español</span>
                 </button>
+                <button class="toggle-button" onclick="exportData()">
+                    <span>📤</span>
+                    <span id="export-text">Export Data</span>
+                </button>
+                <button class="toggle-button" onclick="triggerImport()">
+                    <span>📥</span>
+                    <span id="import-text">Import Data</span>
+                </button>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)" aria-label="Import data file">
             </div>
         </header>
 
@@ -1525,7 +1534,14 @@
                 pointsAhead: 'points ahead',
                 offerFailsThreshold: 'fails threshold in:',
                 noOffers: 'Add job offers to see satisfaction comparison',
-                calculateSatisfaction: 'Calculate Satisfaction'
+                calculateSatisfaction: 'Calculate Satisfaction',
+                exportData: 'Export Data',
+                importData: 'Import Data',
+                exportSuccess: 'Data exported successfully!',
+                exportError: 'Error exporting data.',
+                importSuccess: 'Data imported successfully!',
+                importError: 'Error importing data. Please check the file format.',
+                confirmImport: 'This will replace all current data. Are you sure you want to continue?'
             },
             es: {
                 headerTitle: '💼 Calculadora de Compensación Total',
@@ -1722,7 +1738,14 @@
                 pointsAhead: 'puntos adelante',
                 offerFailsThreshold: 'falla umbral en:',
                 noOffers: 'Agrega ofertas de trabajo para ver la comparación de satisfacción',
-                calculateSatisfaction: 'Calcular Satisfacción'
+                calculateSatisfaction: 'Calcular Satisfacción',
+                exportData: 'Exportar Datos',
+                importData: 'Importar Datos',
+                exportSuccess: '¡Datos exportados exitosamente!',
+                exportError: 'Error al exportar datos.',
+                importSuccess: '¡Datos importados exitosamente!',
+                importError: 'Error al importar datos. Por favor verifica el formato del archivo.',
+                confirmImport: 'Esto reemplazará todos los datos actuales. ¿Estás seguro de que deseas continuar?'
             }
         };
 
@@ -1772,6 +1795,8 @@
             document.getElementById('header-subtitle').textContent = t('headerSubtitle');
             document.getElementById('theme-text').textContent = currentTheme === 'dark' ? t('lightMode') : t('darkMode');
             document.getElementById('lang-text').textContent = currentLang === 'en' ? t('español') : t('english');
+            document.getElementById('export-text').textContent = t('exportData');
+            document.getElementById('import-text').textContent = t('importData');
             
             // Update add offer button
             const addOfferBtn = document.querySelector('.add-offer-btn');
@@ -2362,6 +2387,132 @@
             if (el) {
                 el.checked = !!value;
             }
+        }
+        
+        // Export data to JSON file
+        function exportData() {
+            try {
+                // Gather all data from localStorage
+                const offersData = localStorage.getItem(STORAGE_KEY);
+                const satisfactionPrefsData = localStorage.getItem('satisfactionPreferences');
+                const satisfactionScoresData = localStorage.getItem('offerSatisfactionScores');
+                
+                const exportPayload = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    offers: offersData ? JSON.parse(offersData) : null,
+                    satisfactionPreferences: satisfactionPrefsData ? JSON.parse(satisfactionPrefsData) : null,
+                    offerSatisfactionScores: satisfactionScoresData ? JSON.parse(satisfactionScoresData) : null,
+                    theme: localStorage.getItem('theme'),
+                    language: localStorage.getItem('language')
+                };
+                
+                // Create blob and download
+                const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `compensation-calculator-data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(t('exportSuccess'));
+            } catch (e) {
+                console.error('Error exporting data:', e);
+                alert(t('exportError'));
+            }
+        }
+        
+        // Trigger file input for import
+        function triggerImport() {
+            document.getElementById('import-file-input').click();
+        }
+        
+        // Import data from JSON file
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Confirm before importing
+            if (!confirm(t('confirmImport'))) {
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate data structure - check version exists and offers property exists (can be null for empty exports)
+                    if (!data.version || !data.hasOwnProperty('offers')) {
+                        throw new Error('Invalid data format');
+                    }
+                    
+                    // Clear existing offers from UI
+                    const container = document.getElementById('offersContainer');
+                    container.innerHTML = '';
+                    offers = {};
+                    offerCount = 0;
+                    
+                    // Restore data to localStorage - clear if not present in import
+                    if (data.offers) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.offers));
+                    } else {
+                        localStorage.removeItem(STORAGE_KEY);
+                    }
+                    if (data.satisfactionPreferences) {
+                        localStorage.setItem('satisfactionPreferences', JSON.stringify(data.satisfactionPreferences));
+                    } else {
+                        localStorage.removeItem('satisfactionPreferences');
+                    }
+                    if (data.offerSatisfactionScores) {
+                        localStorage.setItem('offerSatisfactionScores', JSON.stringify(data.offerSatisfactionScores));
+                    } else {
+                        localStorage.removeItem('offerSatisfactionScores');
+                    }
+                    if (data.theme) {
+                        localStorage.setItem('theme', data.theme);
+                        // Apply theme immediately
+                        currentTheme = data.theme;
+                        document.documentElement.setAttribute('data-theme', currentTheme);
+                    } else {
+                        // Reset to default theme
+                        localStorage.removeItem('theme');
+                        currentTheme = 'light';
+                        document.documentElement.setAttribute('data-theme', currentTheme);
+                    }
+                    if (data.language) {
+                        localStorage.setItem('language', data.language);
+                        // Apply language immediately
+                        currentLang = data.language;
+                        document.documentElement.setAttribute('lang', currentLang === 'en' ? 'en' : 'es');
+                    } else {
+                        // Reset to default language
+                        localStorage.removeItem('language');
+                        currentLang = 'en';
+                        document.documentElement.setAttribute('lang', 'en');
+                    }
+                    
+                    // Reload the application state
+                    initializePreferences();
+                    initializeSatisfactionUI();
+                    loadOffersFromLocalStorage();
+                    updateComparison();
+                    updateTranslations();
+                    
+                    alert(t('importSuccess'));
+                } catch (err) {
+                    console.error('Error importing data:', err);
+                    alert(t('importError'));
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset the file input so the same file can be imported again if needed
+            event.target.value = '';
         }
         
         // Add vesting milestone with pre-filled values
