@@ -1027,7 +1027,7 @@
                     <span>📥</span>
                     <span id="import-text">Import Data</span>
                 </button>
-                <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)">
+                <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)" aria-label="Import data file">
             </div>
         </header>
 
@@ -1538,6 +1538,7 @@
                 exportData: 'Export Data',
                 importData: 'Import Data',
                 exportSuccess: 'Data exported successfully!',
+                exportError: 'Error exporting data.',
                 importSuccess: 'Data imported successfully!',
                 importError: 'Error importing data. Please check the file format.',
                 confirmImport: 'This will replace all current data. Are you sure you want to continue?'
@@ -1741,6 +1742,7 @@
                 exportData: 'Exportar Datos',
                 importData: 'Importar Datos',
                 exportSuccess: '¡Datos exportados exitosamente!',
+                exportError: 'Error al exportar datos.',
                 importSuccess: '¡Datos importados exitosamente!',
                 importError: 'Error al importar datos. Por favor verifica el formato del archivo.',
                 confirmImport: 'Esto reemplazará todos los datos actuales. ¿Estás seguro de que deseas continuar?'
@@ -2391,12 +2393,16 @@
         function exportData() {
             try {
                 // Gather all data from localStorage
+                const offersData = localStorage.getItem(STORAGE_KEY);
+                const satisfactionPrefsData = localStorage.getItem('satisfactionPreferences');
+                const satisfactionScoresData = localStorage.getItem('offerSatisfactionScores');
+                
                 const exportPayload = {
                     version: '1.0',
                     exportDate: new Date().toISOString(),
-                    offers: localStorage.getItem(STORAGE_KEY) ? JSON.parse(localStorage.getItem(STORAGE_KEY)) : null,
-                    satisfactionPreferences: localStorage.getItem('satisfactionPreferences') ? JSON.parse(localStorage.getItem('satisfactionPreferences')) : null,
-                    offerSatisfactionScores: localStorage.getItem('offerSatisfactionScores') ? JSON.parse(localStorage.getItem('offerSatisfactionScores')) : null,
+                    offers: offersData ? JSON.parse(offersData) : null,
+                    satisfactionPreferences: satisfactionPrefsData ? JSON.parse(satisfactionPrefsData) : null,
+                    offerSatisfactionScores: satisfactionScoresData ? JSON.parse(satisfactionScoresData) : null,
                     theme: localStorage.getItem('theme'),
                     language: localStorage.getItem('language')
                 };
@@ -2415,7 +2421,7 @@
                 alert(t('exportSuccess'));
             } catch (e) {
                 console.error('Error exporting data:', e);
-                alert('Error exporting data: ' + e.message);
+                alert(t('exportError'));
             }
         }
         
@@ -2440,8 +2446,8 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     
-                    // Validate data structure
-                    if (!data.version || !data.offers) {
+                    // Validate data structure - check version exists and offers property exists (can be null for empty exports)
+                    if (!data.version || !data.hasOwnProperty('offers')) {
                         throw new Error('Invalid data format');
                     }
                     
@@ -2451,21 +2457,43 @@
                     offers = {};
                     offerCount = 0;
                     
-                    // Restore data to localStorage
+                    // Restore data to localStorage - clear if not present in import
                     if (data.offers) {
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(data.offers));
+                    } else {
+                        localStorage.removeItem(STORAGE_KEY);
                     }
                     if (data.satisfactionPreferences) {
                         localStorage.setItem('satisfactionPreferences', JSON.stringify(data.satisfactionPreferences));
+                    } else {
+                        localStorage.removeItem('satisfactionPreferences');
                     }
                     if (data.offerSatisfactionScores) {
                         localStorage.setItem('offerSatisfactionScores', JSON.stringify(data.offerSatisfactionScores));
+                    } else {
+                        localStorage.removeItem('offerSatisfactionScores');
                     }
                     if (data.theme) {
                         localStorage.setItem('theme', data.theme);
+                        // Apply theme immediately
+                        currentTheme = data.theme;
+                        document.documentElement.setAttribute('data-theme', currentTheme);
+                    } else {
+                        // Reset to default theme
+                        localStorage.removeItem('theme');
+                        currentTheme = 'light';
+                        document.documentElement.setAttribute('data-theme', currentTheme);
                     }
                     if (data.language) {
                         localStorage.setItem('language', data.language);
+                        // Apply language immediately
+                        currentLang = data.language;
+                        document.documentElement.setAttribute('lang', currentLang === 'en' ? 'en' : 'es');
+                    } else {
+                        // Reset to default language
+                        localStorage.removeItem('language');
+                        currentLang = 'en';
+                        document.documentElement.setAttribute('lang', 'en');
                     }
                     
                     // Reload the application state
@@ -2473,6 +2501,7 @@
                     initializeSatisfactionUI();
                     loadOffersFromLocalStorage();
                     updateComparison();
+                    updateTranslations();
                     
                     alert(t('importSuccess'));
                 } catch (err) {
