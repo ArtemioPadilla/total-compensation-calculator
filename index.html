@@ -1019,6 +1019,15 @@
                     <span id="lang-icon">🌐</span>
                     <span id="lang-text">Español</span>
                 </button>
+                <button class="toggle-button" onclick="exportData()">
+                    <span>📤</span>
+                    <span id="export-text">Export Data</span>
+                </button>
+                <button class="toggle-button" onclick="triggerImport()">
+                    <span>📥</span>
+                    <span id="import-text">Import Data</span>
+                </button>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)">
             </div>
         </header>
 
@@ -1525,7 +1534,13 @@
                 pointsAhead: 'points ahead',
                 offerFailsThreshold: 'fails threshold in:',
                 noOffers: 'Add job offers to see satisfaction comparison',
-                calculateSatisfaction: 'Calculate Satisfaction'
+                calculateSatisfaction: 'Calculate Satisfaction',
+                exportData: 'Export Data',
+                importData: 'Import Data',
+                exportSuccess: 'Data exported successfully!',
+                importSuccess: 'Data imported successfully!',
+                importError: 'Error importing data. Please check the file format.',
+                confirmImport: 'This will replace all current data. Are you sure you want to continue?'
             },
             es: {
                 headerTitle: '💼 Calculadora de Compensación Total',
@@ -1722,7 +1737,13 @@
                 pointsAhead: 'puntos adelante',
                 offerFailsThreshold: 'falla umbral en:',
                 noOffers: 'Agrega ofertas de trabajo para ver la comparación de satisfacción',
-                calculateSatisfaction: 'Calcular Satisfacción'
+                calculateSatisfaction: 'Calcular Satisfacción',
+                exportData: 'Exportar Datos',
+                importData: 'Importar Datos',
+                exportSuccess: '¡Datos exportados exitosamente!',
+                importSuccess: '¡Datos importados exitosamente!',
+                importError: 'Error al importar datos. Por favor verifica el formato del archivo.',
+                confirmImport: 'Esto reemplazará todos los datos actuales. ¿Estás seguro de que deseas continuar?'
             }
         };
 
@@ -1772,6 +1793,8 @@
             document.getElementById('header-subtitle').textContent = t('headerSubtitle');
             document.getElementById('theme-text').textContent = currentTheme === 'dark' ? t('lightMode') : t('darkMode');
             document.getElementById('lang-text').textContent = currentLang === 'en' ? t('español') : t('english');
+            document.getElementById('export-text').textContent = t('exportData');
+            document.getElementById('import-text').textContent = t('importData');
             
             // Update add offer button
             const addOfferBtn = document.querySelector('.add-offer-btn');
@@ -2362,6 +2385,105 @@
             if (el) {
                 el.checked = !!value;
             }
+        }
+        
+        // Export data to JSON file
+        function exportData() {
+            try {
+                // Gather all data from localStorage
+                const exportPayload = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    offers: localStorage.getItem(STORAGE_KEY) ? JSON.parse(localStorage.getItem(STORAGE_KEY)) : null,
+                    satisfactionPreferences: localStorage.getItem('satisfactionPreferences') ? JSON.parse(localStorage.getItem('satisfactionPreferences')) : null,
+                    offerSatisfactionScores: localStorage.getItem('offerSatisfactionScores') ? JSON.parse(localStorage.getItem('offerSatisfactionScores')) : null,
+                    theme: localStorage.getItem('theme'),
+                    language: localStorage.getItem('language')
+                };
+                
+                // Create blob and download
+                const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `compensation-calculator-data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(t('exportSuccess'));
+            } catch (e) {
+                console.error('Error exporting data:', e);
+                alert('Error exporting data: ' + e.message);
+            }
+        }
+        
+        // Trigger file input for import
+        function triggerImport() {
+            document.getElementById('import-file-input').click();
+        }
+        
+        // Import data from JSON file
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Confirm before importing
+            if (!confirm(t('confirmImport'))) {
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate data structure
+                    if (!data.version || !data.offers) {
+                        throw new Error('Invalid data format');
+                    }
+                    
+                    // Clear existing offers from UI
+                    const container = document.getElementById('offersContainer');
+                    container.innerHTML = '';
+                    offers = {};
+                    offerCount = 0;
+                    
+                    // Restore data to localStorage
+                    if (data.offers) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.offers));
+                    }
+                    if (data.satisfactionPreferences) {
+                        localStorage.setItem('satisfactionPreferences', JSON.stringify(data.satisfactionPreferences));
+                    }
+                    if (data.offerSatisfactionScores) {
+                        localStorage.setItem('offerSatisfactionScores', JSON.stringify(data.offerSatisfactionScores));
+                    }
+                    if (data.theme) {
+                        localStorage.setItem('theme', data.theme);
+                    }
+                    if (data.language) {
+                        localStorage.setItem('language', data.language);
+                    }
+                    
+                    // Reload the application state
+                    initializePreferences();
+                    initializeSatisfactionUI();
+                    loadOffersFromLocalStorage();
+                    updateComparison();
+                    
+                    alert(t('importSuccess'));
+                } catch (err) {
+                    console.error('Error importing data:', err);
+                    alert(t('importError'));
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset the file input so the same file can be imported again if needed
+            event.target.value = '';
         }
         
         // Add vesting milestone with pre-filled values
